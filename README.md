@@ -17,7 +17,7 @@
   
  * **Examples**
   
-      The **example** folder contains two toy examples of endopeptidase digestion. 
+      The **examples** folder contains two toy examples of endopeptidase digestion. 
       
       In order to run the examples, execute the following command for a date without noise 
       
