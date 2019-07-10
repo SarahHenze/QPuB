@@ -8,13 +8,36 @@
   
     * manually download and unzip the .zip file in your local computer
     
-    * run the following command in your terminal AFTER 
+    * after going to the **QPuB** folder, run the following command from the terminal 
     
     ```R
-       Rscript runQPuB.r -fol <PATH TO THE INPUT FOLDER> -pf paramfile -tim tp -titr titration
+       Rscript runQPuB.r -fol <INPUT FOLDER> -pf input.txt -tim <file contains timepoints> -titr <file contains titration>
     ```
     
  *  **Output**
+ 
+    **boxplot\_chain.pdf** &nbsp; boxplot corresponding to the distributions of conversion factors  
+	 
+   	**chain\_XYZ.RData**   &nbsp; stores trace of the Markov chain or the time series of the parameter draws  
+			
+   	**chain\_backscaled.RData** &nbsp;   stores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration     
+	 
+ 	**conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** &nbsp; means and standard deviations of absolute concentrations of the products at different time points for the **Nrep**th replicate, respectively  
+	
+	**massdeviation.png** &nbsp; plot of total mass deviation of the products over Monte Carlo iterations                                                                                                   
+ 
+	**massdev.RData**  &nbsp;  stores mass deviation of the products over Monte Carlo iterations   
+ 
+	**relation.png**   &nbsp; plot of relation between the estimated conversion factors and the peptide lengths                                                                                          
+ 
+ 	**runQPuB\_ROUT.txt** &nbsp; contains the initial parameters that were feed to the algorithm and acceptance rates as the chain progresses. The output of any print command directly goes into the file. 
+ 
+ 
+ 	**chain\_Niter.pdf**   &nbsp; trace plots of the Markov chain at Niter\(^{th}\) iteration   
+ 
+ 	**residuals\_M.txt**   &nbsp; residual plot at M\(^{th}\) iteration. The plot display mass deviation for individual amino acids of the substrate.
+ 
+ 	**statistics.csv**    &nbsp; summary statistic for the Markov chain  
       
     
  * **Dependencies**
