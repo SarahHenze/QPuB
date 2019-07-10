@@ -1,4 +1,4 @@
-## QPuB - Quantification of peptide using Bayesian approach
+## QPuB - Quantification of peptide using Bayesian inference
 
    QPuB employs Bayesian statistical inference based on Markov chain Monte Carlo (MCMC) sampling to learn the posterior distributions of the converison factors for peptide products. 
    
