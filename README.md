@@ -43,7 +43,7 @@
 	 
     4.   **conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** &nbsp; means and standard deviations of absolute concentrations of the products at different time points for the **Nrep** replicate, respectively  
 	
-    5	**massdeviation.png** &nbsp; plot of total mass deviation of the products over Monte Carlo iterations                                                                                                   
+    5.	**massdeviation.png** &nbsp; plot of total mass deviation of the products over Monte Carlo iterations                                                                                                   
  
     6.	**massdev.RData**  &nbsp;  stores mass deviation of the products over Monte Carlo iterations   
  
