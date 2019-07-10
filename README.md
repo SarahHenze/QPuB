@@ -8,11 +8,15 @@
   
     * manually download and unzip the .zip file in your local computer
     
-    * run the following command in your terminal
+    * run the following command in your terminal AFTER 
     
     ```R
-       Rscript runQPuB.r -fol ifolder -pf paramfile -tim tp -titr titration
+       Rscript runQPuB.r -fol <PATH TO THE INPUT FOLDER> -pf paramfile -tim tp -titr titration
     ```
+    
+ *  **Output**
+      
+    
  * **Dependencies**
  
    1.  **R.utils** for processing the command line arguments.
@@ -40,3 +44,6 @@ Markov chain.
 
    12. **matrixStats** to compute standard deviation of columns of a ma-
 trix.
+
+
+
