@@ -6,14 +6,31 @@
 
   Execution of QPuB proceeds through two simple steps
   
-    * manually download and unzip the .zip file in your local computer
+    * manually download the package and unzip the file in your local computer
     
     * after going to the **QPuB** folder, run the following command from the terminal 
     
     ```R
        Rscript runQPuB.r -fol <INPUT FOLDER> -pf input.txt -tim <file contains timepoints> -titr <file contains titration>
-    ```
-    
+  
+   ```
+  
+ * **Examples**
+  
+      The **example** folder contains two toy examples of endopeptidase digestion. 
+      
+      In order to run the examples, execute the following command for a date without noise 
+      
+     ```R
+      Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
+     ```
+     and 
+     
+      ```R
+      Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
+     ```
+     for the data with noise 
+     
  *  **Output**
  
     1. **boxplot\_chain.pdf** &nbsp; boxplot corresponding to the distributions of conversion factors  
