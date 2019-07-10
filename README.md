@@ -4,7 +4,7 @@
    
 * **Execution**
 
-  In order to run QPuB, users are strongly advised to install **R** with version **3.5.0** or above 
+  In order to run QPuB, users are strongly advised to install **R** with version **3.5.0** or above along with the dependencies mentioned below.  
   
   Execution of QPuB proceeds through two simple steps
   
