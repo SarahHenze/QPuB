@@ -1,9 +1,11 @@
 ## QPuB - Quantification of peptide using Bayesian approach
 
-   QPuB employs Bayesian statistical inference based on Markov chain Monte Carlo sampling to learn the posterior distribution of the converison factors for the peptide products
+   QPuB employs Bayesian statistical inference based on Markov chain Monte Carlo sampling to learn the posterior distribution of the converison factors for the peptide products. 
    
 * **Execution**
 
+  In order to run QPuB, users are strongly advised to install **R** with version **3.5.0** or above 
+  
   Execution of QPuB proceeds through two simple steps
   
     * manually download the package and unzip the file in your local computer
