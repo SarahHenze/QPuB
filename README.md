@@ -16,28 +16,27 @@
     
  *  **Output**
  
-    **boxplot\_chain.pdf** &nbsp; boxplot corresponding to the distributions of conversion factors  
+    1. **boxplot\_chain.pdf** &nbsp; boxplot corresponding to the distributions of conversion factors  
 	 
-   	**chain\_XYZ.RData**   &nbsp; stores trace of the Markov chain or the time series of the parameter draws  
+    2.	**chain\_XYZ.RData**   &nbsp; stores trace of the Markov chain or the time series of the parameter draws  
 			
-   	**chain\_backscaled.RData** &nbsp;   stores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration     
+    3.	**chain\_backscaled.RData** &nbsp;   stores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration     
 	 
- 	**conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** &nbsp; means and standard deviations of absolute concentrations of the products at different time points for the **Nrep**th replicate, respectively  
+    4.   **conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** &nbsp; means and standard deviations of absolute concentrations of the products at different time points for the **Nrep**th replicate, respectively  
 	
-	**massdeviation.png** &nbsp; plot of total mass deviation of the products over Monte Carlo iterations                                                                                                   
+    5	**massdeviation.png** &nbsp; plot of total mass deviation of the products over Monte Carlo iterations                                                                                                   
  
-	**massdev.RData**  &nbsp;  stores mass deviation of the products over Monte Carlo iterations   
+    6.	**massdev.RData**  &nbsp;  stores mass deviation of the products over Monte Carlo iterations   
  
-	**relation.png**   &nbsp; plot of relation between the estimated conversion factors and the peptide lengths                                                                                          
+    7.	**relation.png**   &nbsp; plot of relation between the estimated conversion factors and the peptide lengths                                                                                          
  
- 	**runQPuB\_ROUT.txt** &nbsp; contains the initial parameters that were feed to the algorithm and acceptance rates as the chain progresses. The output of any print command directly goes into the file. 
+    8.  **runQPuB\_ROUT.txt** &nbsp; contains the initial parameters that were feed to the algorithm and acceptance rates as the chain progresses. The output of any print command directly goes into the file. 
  
+    9.	**chain\_Niter.pdf**   &nbsp; trace plots of the Markov chain at **Niter** iteration   
  
- 	**chain\_Niter.pdf**   &nbsp; trace plots of the Markov chain at Niter\(^{th}\) iteration   
- 
- 	**residuals\_M.txt**   &nbsp; residual plot at M\(^{th}\) iteration. The plot display mass deviation for individual amino acids of the substrate.
- 
- 	**statistics.csv**    &nbsp; summary statistic for the Markov chain  
+    10. **residuals\_M.txt**   &nbsp; residual plot at **M** iteration. The plot display mass deviation for individual amino acids of the substrate
+    
+    11. **statistics.csv**    &nbsp; summary statistic for the Markov chain  
       
     
  * **Dependencies**
