@@ -15,22 +15,28 @@
     ```
  * **Dependencies**
  
-   1. **R.utils** -for processing the command line arguments.
+   1.**R.utils** for processing the command line arguments.
    
-   2. **tictoc** -provides timing function
+   2.**tictoc** provides timing function
    
-   3. **mcmcse** to compute the effective sample size.
-
-
-tmvtnorm to generate the truncated multivariate normal distri-
+   3.**mcmcse** to compute the effective sample size.
+   
+   4.**tmvtnorm**  to generate the truncated multivariate normal distri-
 bution.
-corpcor to make a matrix postive definite.
-dqRNGkind to generate fast pseudo random numbers.
-coda to produce an mcmc object for further anaylsis of the
+   5.**corpcor** to make a matrix postive definite. 
+   
+   6.**dqRNGkind** to generate fast pseudo random numbers.
+   
+   7.**coda** to produce an mcmc object for further anaylsis of the
 Markov chain.
-base to execute Base R functions
-matrixcalc to check whether a matrix is positive definite or not
-ggdmc to generate univariate truncated normal distributon.
-grDevices for cairo pdf.
-matrixStats to compute standard deviation of columns of a ma-
+
+   8.**base** to execute Base R functions
+
+   9.**matrixcalc** to check whether a matrix is positive definite or not
+
+   10.**ggdmc** to generate univariate truncated normal distributon.
+
+   11.**grDevices** for cairo pdf.
+
+   12.**matrixStats** to compute standard deviation of columns of a ma-
 trix.
