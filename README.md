@@ -86,5 +86,7 @@ Markov chain.
    12. **matrixStats** to compute standard deviation of columns of a ma-
 trix.
 
-
+ * **Documentation**
+ 
+     In progress 
 
