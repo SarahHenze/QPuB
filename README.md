@@ -10,7 +10,7 @@
   
     * manually download the package and unzip the file in your local computer
     
-    * after going to the **QPuB** folder, run the following command from the terminal 
+    * after going to the **QPuB** sub-folder, run the following command from the terminal 
     
     ```R
        Rscript runQPuB.r -fol <INPUT FOLDER> -pf input.txt -tim <file contains timepoints> -titr <file contains titration>
