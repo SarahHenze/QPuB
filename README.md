@@ -6,9 +6,9 @@
 
   In order to run QPuB, users are strongly advised to install **R** with version **3.5.0** or above along with the dependencies mentioned below.  
   
-  Execution of QPuB proceeds through two simple steps
+ Run the QPuB using two simple steps as follows:
   
-    * manually download the package and unzip the file in your local computer
+    * manually download the package and extract the .zip file in your local computer
     
     * after changing the working directory to **QPuB** sub-folder, run the following command from the terminal 
     
