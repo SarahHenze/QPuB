@@ -2,7 +2,7 @@
 
 [![Bayesian inference][bayestat-image]][bayestat-url]
 [![Peptide quantification][peptide-image]][peptide-url]
-[Immunoproteomics](immunoprot-url)
+[Immunoproteomics](https://en.wikipedia.org/wiki/Immunoproteomics)
 
 QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employs [Bayesian statistical inference](https://en.wikipedia.org/wiki/Bayesian_inference) based on [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampling to learn the posterior distributions of the converison factors for peptide products. 
 
