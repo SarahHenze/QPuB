@@ -1,88 +1,122 @@
-## QPuB - Quantification of peptide using Bayesian inference
+# QPuB
 
-   QPuB employs Bayesian statistical inference based on Markov chain Monte Carlo (MCMC) sampling to learn the posterior distributions of the converison factors for peptide products. 
+[![Bayesian inference][bayestat-image]][bayestat-url]
+[![Peptide quantification][peptide-image]][peptide-url]
+[Immunoproteomics](immunoprot-url)
+
+QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employs [Bayesian statistical inference](https://en.wikipedia.org/wiki/Bayesian_inference) based on [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampling to learn the posterior distributions of the converison factors for peptide products. 
+
+## Getting started
+
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products
+
+### Prerequisites
+
+In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0](https://www.r-project.org/) and the following packages:
+
+* [**R.utils**](https://cran.r-project.org/web/packages/R.utils/index.html)
    
-* **Execution**
+* [**tictoc**](https://cran.r-project.org/web/packages/tictoc/index.html) 
+   
+* [**mcmcse**](https://cran.r-project.org/web/packages/mcmcse/index.html) 
+   
+* [**tmvtnorm**](https://cran.r-project.org/web/packages/tmvtnorm/index.html)  
 
-  In order to run QPuB, users are strongly advised to install **R** with version **3.5.0** or above along with the dependencies mentioned below.  
-  
- Run the QPuB using two simple steps as follows:
- * manually download the package and extract the .zip file in your local computer
- * after changing the working directory to **QPuB** sub-folder, run the following command from the terminal 
+* [**corpcor**](https://cran.r-project.org/web/packages/corpcor/index.html) 
+   
+* [**dqRNGkind**](https://www.rdocumentation.org/packages/dqrng/versions/0.2.1/topics/dqRNGkind) 
+   
+* [**coda**](https://cran.r-project.org/web/packages/coda/index.html) 
+
+* [**base**](https://www.rdocumentation.org/packages/base/versions/3.6.1) 
+
+* [**matrixcalc**](https://www.rdocumentation.org/packages/matrixcalc) 
+
+* [**ggdmc**](https://www.rdocumentation.org/packages/ggdmc)
+ 
+* [**grDevices**](https://www.rdocumentation.org/packages/grDevices) 
+
+* [**matrixStats**](https://www.rdocumentation.org/packages/matrixStats) 
+
+To install the above packages, start your **R** shell, and execute the following command:
+
+```R
+ > install.packages("package_name")
+ ```
+REMEMBER, for Linux the above command will work provided the user has the root access.
+
+## Running QPuB
+   
+   Once all the prerequisites are met, QPuB is needed to be download either manually from its [Github repository](https://github.com/QuantSysBio/QPuB). The next step is to navigate to **QPuB** sub-folder inside the **QPuB** and run the following command from the terminal 
     
-    ```R     
+ ```R     
+       
        Rscript runQPuB.r -fol <INPUT FOLDER> -pf input.txt -tim <file contains timepoints> -titr <file contains titration>
-   ```
-* **Examples**
+   
+ ```
+## Examples
+
+   The **examples** folder contains two toy examples of endopeptidase digestion. 
+   In order to run the examples, execute the following command for a date without noise 
+   
+   ### Example 1: Endopeptidase digestion without noise
+   ```R     
+       
+       Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
+   
+ ``` 
+   ### Example 2: Endopeptidase digestion with noise  
+  ```R     
+       
+       Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
+   
+ ``` 
+ ## Output of QPuB
+ 
+  QPuB generates the following set output files
+   
+ | File | Description |
+| ------ | ------ |
+| **boxplot\_chain.pdf** | boxplot corresponding to the distributions of conversion factors |
+| **chain\_Niter.pdf**  | trace plots of the Markov chain at **Niter**<sup>th</sup> iteration     |  
+| **chain\_XYZ.RData** | tores trace of the Markov chain or the time series of the parameter draws   |
+| **chain\_backscaled.RData** | tores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration    |
+| **massdev.RData**  | stores mass deviation of the products over Monte Carlo iterations    |  
+| **runQPuB\_ROUT.txt**  | contains the initial parameters that were feed to the algorithm and acceptance rates as the chain progresses. The output of any print command directly goes into the file.    |  
+| **residuals\_M.txt** | t residual plot at **M**<sup>th</sup> iteration. The plot display mass deviation for individual amino acids of the substrate     |
+| **conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** | stores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration   |
+| **statistics.csv**  | summary statistic for the Markov chain     |
+| **massdeviation.png**  | plot of total mass deviation of the products over Monte Carlo iterations  |
+| **relation.png**  | plot of relation between the estimated conversion factors and the peptide lengths    |  
+ 
+   
+ ## Documentation
+ 
+      A PDF version of the documentation will be soon added to the repository
+ 
+ ## Developers
+               
+  * [**Sarah Henze**](https://www.mpibpc.mpg.de/person/59990/84522)
   
-     The **examples** folder contains two toy examples of endopeptidase digestion. 
-      
-     In order to run the examples, execute the following command for a date without noise 
-      
-     ```R
-      Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
-     ```
-     and 
-     
-     ```R
-      Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
-     ```
-     for the data with noise 
-     
- *  **Output**
+  * [**Debdas Paul**](https://www.mpibpc.mpg.de/person/97709/2169)  
+  
+  * [**Juliane Liepe**](https://www.mpibpc.mpg.de/person/52238/15851745)
  
-    1. **boxplot\_chain.pdf** &nbsp; boxplot corresponding to the distributions of conversion factors  
-	 
-    2.	**chain\_XYZ.RData**   &nbsp; stores trace of the Markov chain or the time series of the parameter draws  
-			
-    3.	**chain\_backscaled.RData** &nbsp;   stores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration     
-	 
-    4.   **conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** &nbsp; means and standard deviations of absolute concentrations of the products at different time points for the **Nrep** replicate, respectively  
-	
-    5.	**massdeviation.png** &nbsp; plot of total mass deviation of the products over Monte Carlo iterations                                                                                                   
- 
-    6.	**massdev.RData**  &nbsp;  stores mass deviation of the products over Monte Carlo iterations   
- 
-    7.	**relation.png**   &nbsp; plot of relation between the estimated conversion factors and the peptide lengths                                                                                          
- 
-    8.  **runQPuB\_ROUT.txt** &nbsp; contains the initial parameters that were feed to the algorithm and acceptance rates as the chain progresses. The output of any print command directly goes into the file. 
- 
-    9.	**chain\_Niter.pdf**   &nbsp; trace plots of the Markov chain at **Niter** iteration   
- 
-    10. **residuals\_M.txt**   &nbsp; residual plot at **M** iteration. The plot display mass deviation for individual amino acids of the substrate
+ ## References 
     
-    11. **statistics.csv**    &nbsp; summary statistic for the Markov chain  
-      
-    
- * **Dependencies**
- 
-   1.  **R.utils** for processing the command line arguments.
-   
-   2. **tictoc** provides timing function
-   
-   3. **mcmcse** to compute the effective sample size.
-   
-   4. **tmvtnorm**  to generate the truncated multivariate normal distri-
-bution.
-   5. **corpcor** to make a matrix postive definite. 
-   
-   6. **dqRNGkind** to generate fast pseudo random numbers.
-   
-   7. **coda** to produce an mcmc object for further anaylsis of the
-Markov chain.
+   [1] Henze, S., Paul, D., Mansurkhodzhaev, A., Henklein, P., Textoris-Taube, K., Henning, U., Mishto,
+M., and Leipe, J. (2019). Quantification of in vitro peptide hydrolysis and protease-catalyzed
+peptide splicing using bayesian inference. Submitted.
 
-   8. **base** to execute Base R functions
-
-   9. **matrixcalc** to check whether a matrix is positive definite or not
-
-   10. **ggdmc** to generate univariate truncated normal distributon.
-
-   11. **grDevices** for cairo pdf.
-
-   12. **matrixStats** to compute standard deviation of columns of a ma-
-trix.
-
- * **Documentation**
- 
-     In progress 
-
+   [2] Paul, D*., Henze, S*., Mishto, M., Liepe, J (2019). QPuB - Quantification of peptides using Bayesian inference. In preperation.  *Equal contributions
+  
+  ## LICENSE:
+  
+  This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for details
+  
+<!-- Markdown link & img dfn's -->
+[bayestat-image]: https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo#/media/File:Bayes_icon.svg
+[peptide-image]: https://en.wikipedia.org/wiki/Peptide#/media/File:Tetrapeptide_structural_formulae_v.1.png
+[bayestat-url]: https://en.wikipedia.org/wiki/Bayesian_inference
+[peptide-url]: https://en.wikipedia.org/wiki/Peptide
+[immunoprot-url]: https://en.wikipedia.org/wiki/Immunoproteomics
