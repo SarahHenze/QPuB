@@ -7,28 +7,24 @@
   In order to run QPuB, users are strongly advised to install **R** with version **3.5.0** or above along with the dependencies mentioned below.  
   
  Run the QPuB using two simple steps as follows:
-  
-    * manually download the package and extract the .zip file in your local computer
+ * manually download the package and extract the .zip file in your local computer
+ * after changing the working directory to **QPuB** sub-folder, run the following command from the terminal 
     
-    * after changing the working directory to **QPuB** sub-folder, run the following command from the terminal 
-    
-    ```R
+    ```R     
        Rscript runQPuB.r -fol <INPUT FOLDER> -pf input.txt -tim <file contains timepoints> -titr <file contains titration>
-  
    ```
+* **Examples**
   
- * **Examples**
-  
-      The **examples** folder contains two toy examples of endopeptidase digestion. 
+     The **examples** folder contains two toy examples of endopeptidase digestion. 
       
-      In order to run the examples, execute the following command for a date without noise 
+     In order to run the examples, execute the following command for a date without noise 
       
      ```R
       Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
      ```
      and 
      
-      ```R
+     ```R
       Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
      ```
      for the data with noise 
