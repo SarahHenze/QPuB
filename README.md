@@ -110,7 +110,7 @@ peptide splicing using bayesian inference. Submitted.
 
    [2] Paul, D*., Henze, S*., Mishto, M., Liepe, J (2019). QPuB - Quantification of peptides using Bayesian inference. In preperation.  *Equal contributions
   
-  ## LICENSE:
+  ## LICENSE
   
   This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for details
   
