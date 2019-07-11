@@ -92,7 +92,7 @@ REMEMBER, for Linux the above command will work provided the user has the root a
    
  ## Documentation
  
-      A PDF version of the documentation will be soon added to the repository
+      <font color="magenta">A PDF version of the documentation will be soon added to the repository</font>
  
  ## Developers
                
