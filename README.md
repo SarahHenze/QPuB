@@ -83,7 +83,7 @@ REMEMBER, for Linux the above command will work provided the user has the root a
 | **chain\_backscaled.RData** | tores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration    |
 | **massdev.RData**  | stores mass deviation of the products over Monte Carlo iterations    |  
 | **runQPuB\_ROUT.txt**  | contains the initial parameters that were feed to the algorithm and acceptance rates as the chain progresses. The output of any print command directly goes into the file.    |  
-| **residuals\_M.txt** | t residual plot at **M**<sup>th</sup> iteration. The plot display mass deviation for individual amino acids of the substrate     |
+| **residuals\_M.txt** | residual plot at **M**<sup>th</sup> iteration. The plot display mass deviation for individual amino acids of the substrate     |
 | **conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** | stores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration   |
 | **statistics.csv**  | summary statistic for the Markov chain     |
 | **massdeviation.png**  | plot of total mass deviation of the products over Monte Carlo iterations  |
