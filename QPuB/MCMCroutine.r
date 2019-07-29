@@ -6,7 +6,17 @@
 # DEFINITION OF POSTERIOR DISTRIBUTION
 # DEFINITION OF LIKELIHOOD FUNCTION
 ####################################################################################################
-{
+#
+# (C) Developers Sarah Henze, Debdas Paul, Juliane Liepe
+# Research group Quantitative and Systems Biology
+# Max Planck Institute for Biophysical Chemistry
+# Goettingen, Germany
+#
+# This project is licensed under the GNU General Public License v3.0 
+#
+####################################################################################################
+
+{ # start file
 
 suppressMessages(library(tictoc)) # timer
 suppressMessages(library(sys)) # timer
@@ -14,138 +24,145 @@ suppressMessages(library(tmvtnorm)) # proposal
 suppressMessages(library(corpcor)) # semidef matrices
 suppressMessages(library(dqrng)) # dqRNGkind("Xoroshiro128+")
 suppressMessages(dqRNGkind("Xoroshiro128+")) # dqrunif
-suppressMessages(library(coda))     # creation of mcmc object
-suppressMessages(library(base))
-suppressMessages(library(matrixcalc))   # is.postive.definite
-suppressMessages(library(ggdmc))   #rtnorm
-#suppressMessages(library(TruncatedNormal)) # distribution function
+suppressMessages(library(coda)) # creation of mcmc object
+suppressMessages(library(base)) # Base R functions
+suppressMessages(library(matrixcalc)) # is.positive.definite
+suppressMessages(library(ggdmc)) #rtnorm
+
 ####################################################################################################
 ######## MCMC ALGORITHM
 
 run_metropolis_MCMC <- function(startvalue, minSample, para_min, para_max, mu, Cov){
 
       cat("\nRUNNING INFERENCE...\n")
+	cat("Diagnostic plots of the chain and the residuals can be found in folder 'plots_diagnostics'.\n")
+      
+      # set a timer
       tic("Total running time")
       starttime <- Sys.time()
       cat(paste0("Starting time: ",starttime, "\n"))
-
-      # keep track of total mass deviation
-      if(plot_massdev==TRUE){ massdev <- c() }
 
       # initialize chain of parameter values
       chain <- array(dim = c(1,length(startvalue)))
       chain[1,] = startvalue
       post_chain = posterior(chain[1,], para_min, para_max)
 
-      # plot with starting values to see improvement
+      # plot with starting values before QPuB
       plotChain(chain[1:1,])
-      # stop('Absicht')
 
-      # keep track of acceptance rate, is it optimal?
+      # print acceptance rate and effective sample size to track performance of the run
       if(Track==TRUE){
             accCount = 0 # counter of proposals accepted
             accHist = numeric(1) # history of acceptance
       }
 
-      stopFlag = 0
+      # run algorithm until Markov chain converged
       iter = 1
       ESS = array(c(rep(NA,length(startvalue))))
-      # run algorithm until chain converged
+      stopFlag = 0
       MaxIterEnable <- FALSE
       while (stopFlag!=1){
 	      if((iter/1000-iter%/%1000)==0){
                   cat(paste("Iteration:",iter,"\n"))
-	            currtime <- Sys.time()
-	            cat(paste("Time elapsed: ",currtime - starttime,"\n"))
 	      }
 
+            # proposal step
             proposal = proposalfunction(chain[iter,], Cov, para_min, para_max, scaling)
             post_prop = posterior(proposal, para_min, para_max)
-            accProb = min(1, exp(post_prop[[1]]   - post_chain[[1]]))
+            accProb = min(1, exp(post_prop[[1]] - post_chain[[1]]))
 
+            # assign space in chain for new iteration 
             temp_chain = c(rep(NA,length(startvalue)))
-            chain<-rbind(chain,temp_chain)
-
+            chain <- rbind(chain,temp_chain)
 
             if (dqrunif(1) <= accProb){
                   # acceptance
                   if(exists('accCount')){ accCount = accCount+1 }
                   if(exists('accHist')){ accHist <- cbind(accHist, c(1)) }
                   chain[iter+1,] = proposal
-                  if(exists('massdev')){ massdev = rbind(massdev, post_prop[[2]]) }
                   post_chain = post_prop
             } else {
                   # rejection
                   chain[iter+1,] = chain[iter,]
-                  if(exists('massdev')){ massdev = rbind(massdev, post_chain[[2]]) }
             }
 
-            if(exists('accCount')){
+            if(exists('accCount') && ((iter/1000-iter%/%1000)==0)){
                   accRate = accCount/iter
-                  cat(sprintf("Acceptance rate: %s\n", accRate)) # TODO still warning!
+                  cat(sprintf("Acceptance rate: %s\n", accRate))
             }
 
             # adaptation
-
-
             Adap = adaptation(mu, Cov, scaling, chain, iter, accProb)
             mu = Adap[[1]]
             Cov = Adap[[2]]
             scaling = Adap[[3]]
 
-            # back scaling the chain
-            #chain_backscaled = chain
-            #chain_backscaled[,1:numP] = chain_backscaled[,1:numP] * scalefac1
+            # check for convergence
+            if(TerminationCriterion==TRUE && (!MaxIterEnable)){ # using convergence criterion based on effective sample size
+                  if((iter >= ESSiter) && ((iter/1000-iter%/%1000)==0)){
+                        mcmcObj = mcmc(chain, start=floor(iter/2), end=iter) # Removing 50% of the samples as burn-In. One can remove 10% or 25% depending on which produces the highest ESS.
 
+                        # Sometimes there is the following error: 
+                              # Error in if (effSampleSize >= minSample) { : missing value where TRUE/FALSE needed
+                              # Calls: run_metropolis_MCMC
+                              # In addition: Warning message:
+                              # In mcse.multi(chain, ...) : Not enough samples. Estimate is not positive definite.
+				mcmcObj = tryCatch({ mcmc(chain, start=floor(iter/2), end=iter) },
+							warning = function(cond){ 
+                                                      message("Here's the original warning message:")
+									message(cond)
+									stop("If it says 'Not enough samples. Estimate is not positive definite.' then try setting ESSiter to a higher value and restart.")})
 
-            if (TerminationCriterion==TRUE & (!MaxIterEnable)){
-                  # removing 50% of the samples as burn-In. One can remove 10% or 25% depending on which produces the highest ESS.
-                  if (iter >=1000){
-                  mcmcObj = mcmc(chain, start=floor(iter/2), end=iter)
-                  effSampleSize <- multiESS(mcmcObj)
-
-
-                  if(Track==TRUE){ cat(paste("Effective sample size: ",effSampleSize, "\n")) }
-                  if (effSampleSize >= minSample){
-                        cat("\n\nStop run: Chain converged.\n\n")
+                        effSampleSize <- multiESS(mcmcObj)
+                        if(Track==TRUE){ cat(paste("Effective sample size: ",effSampleSize, "\n")) }
+                        
+                        if(effSampleSize >= minSample){
+                              cat("\nStop run: Chain converged.\n\n")
+                              cat(paste0("Finishing time: ", Sys.time(), "\n"))
+                              stopFlag = 1
+            
+                              # final plots
+                              plot_chain = TRUE
+                              plot_residuals = TRUE
+                              plotChain(chain[1:iter,])
+                              
+                              # save the chain
+                              save(chain,file='chain.RData')
+                              
+                              # backscaling the chain (needed if products are scaled to fit order of magnitude of substrate, see datapreparation.r)
+                              chain_backscaled <- matrix(,nrow=0,ncol=numP)
+                              chain_backscaled <- rbind(chain_backscaled, chain[,1:numP] * scale_prod) # backscale conversion factors
+                              chain_backscaled <- cbind(chain_backscaled, chain[,c(numP+1,numP+2)]) # sigma and pun don't need to be backscaled
+                              save(chain_backscaled,file='chain_backscaled.RData')
+                              
+                              break
+                        }
+                  }
+            } else { # using maximum number of iterations
+                  if(iter == MaxIter){
+                        cat("\nStop run: Maximum number of iterations reached.\n\n")
+                        cat(paste0("Finishing time: ", Sys.time(), "\n"))
                         stopFlag = 1
-
-                        # finally
+                        
+                        # final plots
                         plot_chain = TRUE
                         plot_residuals = TRUE
                         plotChain(chain[1:iter,])
-                        save(massdev,file='massdev.RData')
-                        chain_backscaled = chain* scalefac1
-                        #chain_backscaled[,1:numP] = chain_backscaled[,1:numP] * scalefac1
+                        
+                        # save the chain
+                        save(chain,file='chain.RData')
+                        
+                        # backscaling the chain (needed if products are scaled to fit order of magnitude of substrate, see datapreparation.r)
+                        chain_backscaled <- matrix(,nrow=0,ncol=numP)
+                        chain_backscaled <- rbind(chain_backscaled, chain[,1:numP] * scale_prod) # backscale conversion factors
+                        chain_backscaled <- cbind(chain_backscaled, chain[,c(numP+1,numP+2)]) # sigma and pun don't need to be backscaled
                         save(chain_backscaled,file='chain_backscaled.RData')
-                        cat(paste0("Finishing time: ",Sys.time(), "\n"))
+                        
                         break
-                     }
-
-               }
-
-            }
-            else
-            {
-
-            if (iter == MaxIter)
-               {
-                   stopFlag = 1
-                   plot_chain = TRUE
-                   plot_residuals = TRUE
-                   plotChain(chain[1:iter,])
-                   save(massdev,file='massdev.RData')
-                   chain_backscaled = chain* scalefac1
-                   #chain_backscaled[,1:numP] = chain_backscaled[,1:numP] * scalefac1
-                   save(chain_backscaled,file='chain_backscaled.RData')
-                   cat(paste0("Finishing time: ",Sys.time(), "\n"))
-                   break
-               }
-
-
+                  }
             }
 
-            # create plots and save chain
+            # create diagnostic plots and save chain
             if (plotdet==TRUE){
                   if(iter<1000){
                         if((iter/100-iter%/%100)==0){
@@ -161,80 +178,47 @@ run_metropolis_MCMC <- function(startvalue, minSample, para_min, para_max, mu, C
                   plotChain(chain[1:iter,])
       	}
             if((iter/freq_save-iter%/%freq_save)==0){
-                  save(chain,file=sprintf('chain_%s.RData',ID))
-                  save(massdev,file=sprintf('massdev.RData',ID))
+                  save(chain,file='chain.RData')
             }
 
             iter = iter + 1
 
       } # end while
 
-      toc()
+      toc() # stop timer
 
-      if(!exists('massdev')){ massdev=NULL }
-      list(chain_backscaled,massdev)
-
-
+      return(chain_backscaled) # return final chain
 }
 
 ####################################################################################################
 ######## PROPOSAL FUNCTION
 
-if(uniformprior==TRUE){
+proposalfunction <- function(param, Cov, para_min, para_max, scaling){
 
-      proposalfunction <- function(param, Cov, para_min, para_max, scaling)
+      Cov <- diag(scaling) * Cov * diag(scaling)
+      posFlag = 0
 
-          {
-
-            Cov <- diag(scaling) * Cov * diag(scaling)
-            posFlag=0
-
-            if (!is.diagonal.matrix(Cov))
-            {
-                stop("Covariance matrix in the proposal is not a diagonal matrix!")
-
+      # covariance matrix must be diagonal
+      if (!is.diagonal.matrix(Cov)){ stop("Covariance matrix in the proposal is not a diagonal matrix!") }
+      
+      # covariance matrix must be positive definite
+      if (det(Cov)<=0){
+            Cov = make.positive.definite(Cov,tol=1e-3)
+            posFlag = 1
+      }
+      
+      # sample from truncated multivariate normal distribution
+      if (posFlag == 0){ # if positive definite
+            rtmvnorm(1, mean=param, sigma=Cov, lower=para_min, upper=para_max, algorithm='gibbs', burn.in.samples=burnGibbs, thinning=thinGibbs)
+      } else { # if forced to be positive definite
+            MaxIterEnable <<- TRUE
+            prop_param = c(rep(NA, length(param)))
+            for (i in 1:length(param)){
+                  prop_param[i] = rtnorm(n = 1,param[i], Cov[i,i], lower=para_min[i], upper=para_max[i])
             }
-            if (det(Cov)<=0)
-            {
-
-                Cov = make.positive.definite(Cov,tol=1e-3)
-                posFlag=1
-
-            }
-            if (posFlag == 0)
-            {
-                rtmvnorm(1, mean = param, sigma = Cov, lower=para_min, upper=para_max, algorithm = 'gibbs', burn.in.samples=100, thinning=20)
-            }
-           else
-            {
-                 MaxIterEnable <<- TRUE
-                 prop_param = c(rep(NA, length(param)))
-                 for (i in 1:length(param))
-                   {
-                      prop_param[i] = rtnorm(n = 1,param[i], Cov[i,i], lower=para_min[i], upper=para_max[i])
-
-                   }
-                   return(prop_param)
-            }
+            return(prop_param)
       }
 }
-
-    else {
-
-      proposalfunction <- function(param, Cov, para_min, para_max, scaling){
-
-            Cov <- diag(scaling) * Cov * diag(scaling)
-            print(Cov)
-            if (det(Cov)<=0){ Cov = make.positive.definite(Cov,tol=1e-3) }
-            rtmvnorm(1, mean = param, sigma = Cov, lower=0, upper=Inf, algorithm="gibbs", burn.in.samples=burnGibbs, thinning=thinGibbs) #TODO lower/upper vector?
-
-      }
-}
-
-
-
-
-
 
 ####################################################################################################
 ######## LIKELIHOOD FUNCTION
@@ -245,69 +229,41 @@ likelihood <- function(param){
       sigma = param[numP+1]
       pun = param[numP+2]
 
-      if(plot_massdev==TRUE){massdev_curr = 0}
-
       likelihood = 0
 
       for(tp in 2:(numCT+1)){ # over list of timepoints to compare
             for(aa in a0:numA){ # over amino acids
-                  for (dg in 1:numD){ # over digestions
+		      for (rp in 1:numR){ # over replicates
+                        amount = 0
 
-                        numPdg = dim(signalF[[dg]][[1]])[1] # number of products in this digestion
+                        for (j in 1:numP){ # over products
+                             amount = amount + cf[j] * signalF[[rp]][j,tp] * ppm[j,aa]
+                        }
 
-                        for (rp in 1:numR){ # over replicates
-                                    amount = 0
+                        if(signalP[[rp]][tp] < amount){
 
-                                    for (j in 1: numP)
-                                    {
-                                         amount = amount + cf[j]*signalF[[dg]][[rp]][j,tp]*ppm[[dg]][j,aa]
-                                    }
+                              likelihood = likelihood + log(pun) + dnorm(amount-signalP[[rp]][tp], 0.0, pun*sigma,log=TRUE)
+                              # The log(pun) needs to be added in the case of mass gain, because the multiplicative change in the standard deviation by the punishment factor pun induces a flattening of the curve.
+                              # To make it continuous in 0 (signalP[[rp]][tp] = amount), the curve needs to be shifted upwards by log(pun).
 
-                                    if (dg==1) { # first digest must be the longest
+                        } else {
 
-                                          if(signalP[[dg]][[rp]][tp] < amount){
-
-                                                likelihood = likelihood + log(pun) + dnorm(amount-signalP[[dg]][[rp]][tp], 0.0, pun*sigma,log=TRUE)
-
-                                          } else {
-
-                                                likelihood = likelihood + dnorm(amount-signalP[[dg]][[rp]][tp], 0.0, sigma,log=TRUE)
-                                          }
-
-                                          if(exists('massdev_curr')){ massdev_curr = massdev_curr + abs(amount-signalP[[dg]][[rp]][tp]) }
-
-                                    } else { # all other digests: respective substrate does not have convfac=1 but its parameter
-
-                                          if(signalP[[dg]][[rp]][tp] < amount){
-
-                                                likelihood = likelihood + log(pun) + dnorm(amount-signalP[[dg]][[rp]][tp]*cf[dg-1], 0.0, pun*sigma,log=TRUE)
-
-                                          } else {
-
-                                                likelihood = likelihood + dnorm(amount-signalP[[dg]][[rp]][tp]*cf[dg-1], 0.0, sigma,log=TRUE)
-                                          }
-
-                                          if(exists('massdev_curr')){ massdev_curr = massdev_curr + abs(amount-signalP[[dg]][[rp]][tp]) }
-                                    }
-                        } # end rp
-                  } # end dg
+                              likelihood = likelihood + dnorm(amount-signalP[[rp]][tp], 0.0, sigma,log=TRUE)
+                        }
+                  } # end rp
             } # end aa
       } # end tp
-      if(!exists('massdev_curr')){massdev_curr=NULL}
-      list(likelihood,massdev_curr)
+      
+      likelihood # return likelihood
 }
 
 ####################################################################################################
 ######## PRIOR DISTRIBUTION
 
-if(uniformprior==TRUE){
-      prior <- function(param, para_min, para_max){
-            sum(dunif(param, min=para_min, max=para_max, log=TRUE))
-      }
-} else {
-      prior <- function(param, para_min, para_max){ # note that para_min and para_max are not needed (set to NULL beforehand)
-            sum(dlnorm(param, meanlog=param1, sdlog=param2, log=TRUE))
-      }
+prior <- function(param, para_min, para_max){
+      
+      sum(dunif(param, min=para_min, max=para_max, log=TRUE))
+      
 }
 
 ####################################################################################################
@@ -315,35 +271,20 @@ if(uniformprior==TRUE){
 
 posterior <- function(param, para_min, para_max){
 
-      list(likelihood(param)[[1]] + prior(param, para_min, para_max), # return posterior
-           likelihood(param)[[2]]) # return massdev
+      likelihood(param) + prior(param, para_min, para_max) # return posterior
 }
 
 ####################################################################################################
 ######## ADAPTIVE MCMC ALGORITHM
 
-if (RaoBlack==TRUE){
-      # Rao-Blackwellised Adaptive-MH algorithm
-      adaptation <- function(mu, Cov, scaling, chain, iter, accProb){
+# Rao-Blackwellised Adaptive-MH algorithm
+adaptation <- function(mu, Cov, scaling, chain, iter, accProb){
 
-            #if (iter < 100)
-            #    Cov <- diag(359)
-            #else
-            Cov <- Cov + gamma(iter+1) * (accProb * outer(chain[iter+1,]-mu,chain[iter+1,]-mu) + (1-accProb) * outer(chain[iter,]-mu,chain[iter,]-mu) - Cov)
-            mu <- mu + gamma(iter+1) * (accProb*(chain[iter+1,]-mu) + (1-accProb)*(chain[iter,]-mu))
-            scaling <- scaling * exp(gamma(iter+1)*(accProb-OptAccRate)) # Global adaptive scaling
+      Cov <- Cov + gamma(iter+1) * (accProb * outer(chain[iter+1,]-mu,chain[iter+1,]-mu) + (1-accProb) * outer(chain[iter,]-mu,chain[iter,]-mu) - Cov)
+      mu <- mu + gamma(iter+1) * (accProb*(chain[iter+1,]-mu) + (1-accProb)*(chain[iter,]-mu))
+      scaling <- scaling * exp(gamma(iter+1)*(accProb-OptAccRate)) # Global adaptive scaling
 
-            return(list(mu, Cov, scaling))
-      }
-} else {
-      # Adaptive-MH algorithm (default)
-      adaptation <- function(mu, Cov, scaling, chain, iter, accProb){
-            Cov <- Cov + gamma(iter+1) * (outer(chain[iter+1,]-mu,chain[iter+1,]-mu) - Cov)
-            mu <- mu + gamma(iter+1) * (chain[iter+1,]-mu)
-            scaling <- scaling * exp(gamma(iter+1)*(accProb-OptAccRate)) # Global adaptive scaling
-
-            return(list(mu, Cov, scaling))
-      }
+      return(list(mu, Cov, scaling))
 }
 
 } # end file
