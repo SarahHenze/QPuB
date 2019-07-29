@@ -117,7 +117,7 @@ the path to the folder:
    ### Example 2: Endopeptidase digestion with noise  
   ```sh     
        
-       Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
+       Rscript runQPuB.r -fol examples/toy_endo3 -pf input.txt 
    
  ``` 
  ## Output of QPuB
