@@ -1,5 +1,5 @@
 
-![](logoqpub.png)
+<img src="logoqpub.png" width="200">
 
 [![Bayesian inference][bayestat-image]][bayestat-url]
 [![Peptide quantification][peptide-image]][peptide-url]
