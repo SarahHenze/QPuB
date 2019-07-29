@@ -1,5 +1,5 @@
 
-# QPuB
+![](logoqpub.png)
 
 [![Bayesian inference][bayestat-image]][bayestat-url]
 [![Peptide quantification][peptide-image]][peptide-url]
