@@ -59,11 +59,10 @@ REMEMBER, for Linux, the above command might need the root access.
    to use QPuB on your data, follow these steps:
 
 **1.** Make sure everything is properly installed on your computer (see
-Chapter [\[cha:inst\]](#cha:inst)).
+Chapter 3 of the documentation).
 
 **2.** Make sure the data files and the inputfolder have the right
-structure (see Sections [\[sec:input\]](#sec:input) and
-[\[sec:parser\]](#sec:parser)).
+structure (see Sections 2.3.1 and 2.3.2  of the documentation more details)
 
 **3.** Open the terminal/command prompt (How to:
 [Linux](https://www.wikihow.com/Open-a-Terminal-Window-in-Ubuntu),
