@@ -108,7 +108,7 @@ REMEMBER, for Linux the above command will work provided the user has the root a
 M., and Leipe, J. (2019). Quantification of in vitro peptide hydrolysis and protease-catalyzed
 peptide splicing using bayesian inference. Submitted.
 
-   [2] Paul, D*., Henze, S*., Mishto, M., Liepe, J (2019). QPuB - Quantification of peptides using Bayesian inference. In preperation.  *Equal contributions
+   [2] Henze, S*., Paul, D*., Mishto, M., Liepe, J (2019). QPuB - Quantification of peptides using Bayesian inference. In preperation.  *Equal contributions
   
   ## LICENSE
   
