@@ -42,9 +42,17 @@ In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0
 To install the above packages, start your **R** shell, and execute the following command:
 
 ```R
- > install.packages("package_name")
+ install.packages("package_name")
  ```
-REMEMBER, for Linux the above command will work provided the user has the root access.
+Alternatively, one can copy-paste the following command in the R terminal 
+
+```R
+install.packages(c("R.utils", "tictoc", "mcmcse", "tmvtnorm", "corpcor", "dqRNGkind", "coda", "base", "matrixcalc", "ggdmc", "grDevices", "matrixStats"))
+ ```
+and press enter.
+
+REMEMBER, for Linux, the above command might need the root access.
+
 
 ## Running QPuB
    Once all the prerequisites are met, QPuB is needed to be download either manually from its Github repository. Next,
@@ -107,7 +115,7 @@ the path to the folder:
 ## Examples
 
    The **examples** folder contains two toy examples of endopeptidase digestion. 
-   In order to run the examples, execute the following command for a date without noise 
+   In order to run the examples, execute the following commands in the terminal
    
    ### Example 1: Endopeptidase digestion without noise
    ```sh     
