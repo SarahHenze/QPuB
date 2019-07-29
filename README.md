@@ -64,13 +64,13 @@ structure (see Sections [\[sec:input\]](#sec:input) and
 **4.** Go to your working directory:
 
 ```sh 
- (C4.1) $ cd hostname:˜/workingdirectory
+   $ cd hostname:˜/workingdirectory
 ```
 
 **5.** The QPuB main script is executed using flags:
 
 ```sh
-  (C4.1) $ Rscript -file -infol -outfol -titr
+  $ Rscript -file -infol -outfol -titr
 ```
 
 QPuB is equipped with facilities to accept and parse command line
@@ -109,13 +109,13 @@ the path to the folder:
    In order to run the examples, execute the following command for a date without noise 
    
    ### Example 1: Endopeptidase digestion without noise
-   ```R     
+   ```sh     
        
        Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
    
  ``` 
    ### Example 2: Endopeptidase digestion with noise  
-  ```R     
+  ```sh     
        
        Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
    
