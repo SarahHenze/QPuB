@@ -46,14 +46,63 @@ To install the above packages, start your **R** shell, and execute the following
 REMEMBER, for Linux the above command will work provided the user has the root access.
 
 ## Running QPuB
-   
-   Once all the prerequisites are met, QPuB is needed to be download either manually from its [Github repository](https://github.com/QuantSysBio/QPuB). The next step is to navigate to **QPuB** sub-folder inside the **QPuB** and run the following command from the terminal 
-    
- ```R     
-       
-       Rscript runQPuB.r -fol <INPUT FOLDER> -pf input.txt -tim <file contains timepoints> -titr <file contains titration>
-   
- ```
+   Once all the prerequisites are met, QPuB is needed to be download either manually from its Github repository. Next,
+   to use QPuB on your data, follow these steps:
+
+**1.** Make sure everything is properly installed on your computer (see
+Chapter [\[cha:inst\]](#cha:inst)).
+
+**2.** Make sure the data files and the inputfolder have the right
+structure (see Sections [\[sec:input\]](#sec:input) and
+[\[sec:parser\]](#sec:parser)).
+
+**3.** Open the terminal/command prompt (How to:
+[Linux](https://www.wikihow.com/Open-a-Terminal-Window-in-Ubuntu),
+[Mac](https://www.wikihow.com/Open-a-Terminal-Window-in-Mac),
+[Windows](https://www.wikihow.com/Open-Terminal-in-Windows)).
+
+**4.** Go to your working directory:
+
+```sh 
+ (C4.1) $ cd hostname:˜/workingdirectory
+```
+
+**5.** The QPuB main script is executed using flags:
+
+```sh
+  (C4.1) $ Rscript -file -infol -outfol -titr
+```
+
+QPuB is equipped with facilities to accept and parse command line
+arguments, where
+
+|                          |                                                                               |
+| :----------------------- | :---------------------------------------------------------------------------- |
+| <span>**-file**</span>   | name/path of the <span>**runQPuB.r**</span>. This input is mandatory.         |
+| <span>**-infol**</span>  | name/path of the <span>**input folder**</span>. This input is mandatory.      |
+| <span>**-outfol**</span> | userdefined name of the **output folder**. This input is optional.            |
+| <span>**-titr**</span>   | name of the <span>**titration data**</span> csv-file. This input is optional. |
+
+Flags can be specified as `-infol inputfolder` or `--infol=inputfolder`.
+
+Depending on your working directory, you also have to provide the path
+to the runQPuB.r file:
+
+1.  working directory is QPuB directory: `-file runQPuB.r`
+
+2.  working directory is somewhere else: `-file path\QPuB\runQPuB.r`
+
+Note, that the flag `-file` for the R script can also be omitted. The
+first argument will always be taken as the name of the R script:
+`Rscript runQPuB.r`.
+
+Depending on the location of the input folder, you also have to provide
+the path to the folder:
+
+1.  inputfolder is in same parent directory as QPuB: `-infol
+    inputfolder`
+
+2.  inputfolder is somewhere else: `-infol path\inputfolder`
 ## Examples
 
    The **examples** folder contains two toy examples of endopeptidase digestion. 
