@@ -114,18 +114,18 @@ the path to the folder:
 ## Examples
 
    The **examples** folder contains two toy examples of endopeptidase digestion. 
-   In order to run the examples, execute the following commands in the terminal
+   In order to run the examples, execute the following commands in the terminalassuming your current directory is the QPuB-master
    
    ### Example 1: Endopeptidase digestion without noise
    ```sh     
        
-       Rscript runQPuB.r -fol examples/toy_endo3_nonoise -pf input.txt 
+       Rscript -file ./QPuB/runQPuB.r -infol examples/toy_endo3_nonoise
    
  ``` 
    ### Example 2: Endopeptidase digestion with noise  
   ```sh     
        
-       Rscript runQPuB.r -fol examples/toy_endo3 -pf input.txt 
+        Rscript -file ./QPuB/runQPuB.r -infol examples/toy_endo3
    
  ``` 
  ## Output of QPuB
