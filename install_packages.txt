@@ -1,1 +1,0 @@
-install.packages(c("R.utils", "tictoc", "mcmcse", "tmvtnorm", "corpcor", "dqRNGkind", "coda", "base", "matrixcalc", "ggdmc", "grDevices", "matrixStats"))
