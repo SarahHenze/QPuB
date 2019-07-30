@@ -125,6 +125,12 @@ the path to the folder:
         Rscript ./QPuB/runQPuB.r -infol examples/toy_noise
    
  ``` 
+   ### Example 3: gp100<sub>40-52</sub> digestion by 26S proteasomes
+  ```sh     
+       
+        Rscript ./QPuB/runQPuB.r -infol examples/Prot_K386
+   
+ ``` 
  ## Output of QPuB
  
   QPuB generates the following set of output files in the respective sub-folder **OUTPUT_example** inside the  [Output](https://github.com/QuantSysBio/QPuB/tree/master/Output) folder
