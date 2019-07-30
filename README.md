@@ -31,8 +31,6 @@ In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0
    
 * [**coda**](https://cran.r-project.org/web/packages/coda/index.html) 
 
-* [**base**](https://www.rdocumentation.org/packages/base/versions/3.6.1) 
-
 * [**matrixcalc**](https://www.rdocumentation.org/packages/matrixcalc) 
 
 * [**ggdmc**](https://www.rdocumentation.org/packages/ggdmc)
@@ -47,7 +45,7 @@ To install the above packages, start your **R** shell, and execute the following
 Alternatively, one can copy-paste the following command in the R terminal 
 
 ```R
-install.packages(c("R.utils", "tictoc", "mcmcse", "tmvtnorm", "corpcor", "dqrng", "coda", "base", "matrixcalc", "ggdmc", "sys", "matrixStats"))
+install.packages(c("R.utils", "tictoc", "mcmcse", "tmvtnorm", "corpcor", "dqrng", "coda", "matrixcalc", "ggdmc", "sys", "matrixStats"))
  ```
 and press enter.
 
