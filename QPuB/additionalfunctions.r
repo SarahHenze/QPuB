@@ -1,15 +1,22 @@
 ####################################################################################################
 # ADDITIONALFUNCTIONS.R FOR QPUB PACKAGE
-# PLOT DISTRIBUTION AND HISTORY OF THE PARAMETERS
+# PLOT DISTRIBUTION AND TRACE OF THE PARAMETERS
 # PLOT RESIDUALS: CURRENT MASS DEVIATION
 # CALCULATE ABSOLUTE CONCENTRATIONS (OPTIONAL: BASED ON TITRATION DATA)
 # PLOT KINETICS BASED ON ABSOLUTE CONCENTRATIONS
-# PLOT IMPROVEMENT OF TOTAL MASS DEVIATION OVER COURSE OF ROUTINE
+####################################################################################################
+#
+# (C) Developers Sarah Henze, Debdas Paul, Juliane Liepe
+# Research group Quantitative and Systems Biology
+# Max Planck Institute for Biophysical Chemistry
+# Goettingen, Germany
+#
+# This project is licensed under the GNU General Public License v3.0 
+#
 ####################################################################################################
 
-{
+{ # start file
 
-suppressMessages(library(grDevices)) # cairo_pdf
 suppressMessages(library(matrixStats)) # standard deviation of columns of a matrix (colSds)
       
 ####################################################################################################
@@ -24,49 +31,53 @@ roundUpNice <- function(x, nice=c(1,2,3,4,5,6,7,8,9,10)) {
 # get the highest and lowest line to set ylim
 ylow = list()
 yhigh = list()
-for(dg in 1:numD){
-      maxline = max(unlist(lapply(signalP[[dg]], function(x) x[which.max(x)])))
-      minline = min(unlist(lapply(signalP[[dg]], function(x) x[which.min(x)])))
-      if(abs(maxline)>abs(minline)){
-            ylow[[dg]] = -roundUpNice(abs(1.5*maxline))
-            yhigh[[dg]] = roundUpNice(abs(1.5*maxline))
-      } else {
-            ylow[[dg]] = -roundUpNice(abs(1.5*minline))
-            yhigh[[dg]] = roundUpNice(abs(1.5*minline))
-      }
+zoom <- 1.5
+maxline = max(unlist(lapply(signalP, function(x) x[which.max(x)])))
+minline = min(unlist(lapply(signalP, function(x) x[which.min(x)])))
+if(abs(maxline)>abs(minline)){
+      ylow = -roundUpNice(abs(zoom*maxline))
+      yhigh = roundUpNice(abs(zoom*maxline))
+} else {
+      ylow = -roundUpNice(abs(zoom*minline))
+      yhigh = roundUpNice(abs(zoom*minline))
 }
 
 plotChain <- function(chain){
       
       Ncurr = dim(chain)[1] # length of current chain
       if(is.null(Ncurr)){ # before the run starts: plot residuals using startvalues
-            Ncurr=1
+            Ncurr = 0
             post = matrix(chain[-c(length(chain),length(chain)-1)], nrow=1) # only convfac (not sigma and pun)
             if(plot_chain==TRUE){ chain_FLAG = TRUE }
             plot_chain = FALSE
-            
-      } else {
-            burnIn = round(1*Ncurr/2)
+      } else if(Ncurr<10000){
+            burnIn = round(Ncurr*burnFrac)
             post = chain[-(1:burnIn),-c(dim(chain)[2],dim(chain)[2]-1)] # chain without burnIn, only convfac (not sigma and pun)
+      } else {
+            burnIn = round(Ncurr*burnFrac)
+            afterburnin = chain[-(1:burnIn),-c(dim(chain)[2],dim(chain)[2]-1)] # chain without burnIn, only convfac (not sigma and pun)
+            samp = sample(Ncurr*burnFrac, 1000, replace = FALSE)
+            post = afterburnin[samp,] # sample of chain without burnin, only convfac (not sigma and pun)
       }
       
       ####################
       ### PLOTTING CHAIN
       
       if(plot_chain==TRUE){
-            # cairo_pdf(normalizePath(paste('plots_diagnostics/chain_',Ncurr,'.pdf',sep=""), winslash="\\", mustWork=TRUE), width=10, height=15, onefile=TRUE) # raster graphics
- 		pdf(paste('plots_diagnostics/chain_',Ncurr,'.pdf',sep=""), width=10, height=15, onefile=TRUE) # raster graphics
-            # pdf(paste(sprintf('plots_%s/chain_',ID),Ncurr,".pdf",sep=""), width=10, height=15) # vector graphics
+            pdf(file.path(paste('plots_diagnostics/chain_',Ncurr,".pdf",sep=""), fsep = .Platform$file.sep), width=8.3, height=11.7, compress=TRUE) # compressed: 852.7kB, uncompressed: 9.5MB (iteration 100000)
             par(mfrow = c(5,2), oma=c(0,2,0,0))
 
-            for(para in 1:dim(chain)[2]){
-                  hist(chain[-(1:burnIn),para], main=paste('parameter',para), xlab="parameter values (using chain excl. BurnIn N/2)", breaks=70, col='gray', las=1)
-                  if(QMEold==TRUE && (para!=dim(chain)[2]) && (para!=dim(chain)[2]-1)){
-                        abline(v=old[para], col='orange')
-                  }
-                  
-                  plot(chain[,para], type = "l", xlab="iteration incl. BurnIn", ylab="parameter value", main = paste("parameter",para), las=1)
+            # peptide products
+            for(para in 1:(dim(chain)[2]-2)){
+                  hist(chain[-(1:burnIn),para], main=paste('peptide',para), xlab="parameter values (using chain excl. BurnIn)", breaks=70, col='gray', las=1)
+                  plot(chain[,para], type = "l", xlab="iteration incl. BurnIn", ylab="parameter value", main = paste("peptide",para), las=1)
             }
+            # sigma
+            hist(chain[-(1:burnIn),dim(chain)[2]-1], main='sigma', xlab="parameter values (using chain excl. BurnIn)", breaks=70, col='gray', las=1)
+            plot(chain[,dim(chain)[2]-1], type = "l", xlab="iteration incl. BurnIn", ylab="parameter value", main = 'sigma', las=1)
+            # punishment parameter
+            hist(chain[-(1:burnIn),dim(chain)[2]], main='punishment parameter', xlab="parameter values (using chain excl. BurnIn)", breaks=70, col='gray', las=1)
+            plot(chain[,dim(chain)[2]], type = "l", xlab="iteration incl. BurnIn", ylab="parameter value", main = 'punishment parameter', las=1)
 
             dev.off()
       }
@@ -76,70 +87,55 @@ plotChain <- function(chain){
 
       if(plot_residuals==TRUE){
             
-            # pdf(normalizePath(paste('plots_diagnostics/residuals_',Ncurr,".pdf",sep=""), winslash="\\", mustWork=TRUE), width=15, height=5)
-		pdf(paste('plots_diagnostics/residuals_',Ncurr,".pdf",sep=""), width=15, height=5)
+            pdf(file.path(paste('plots_diagnostics/residuals_',Ncurr,".pdf",sep=""), fsep = .Platform$file.sep), width=15, height=5, compress=TRUE)
             par(mfrow = c(1,5), oma=c(0,5,3.5,0), mar=c(5,1.5,6,1)) # bottom, left, top, and right
 
             COLORS = rainbow(numR) # numR=2: red cyan, numR=3: red green blue, numR=4: red green cyan purple
 
-            for (dg in 1:numD){ # over digestions
+            for(tp in 1:(numCT+1)){
 
-                  numPdg = dim(signalF[[dg]][[1]])[1] # number of products in that digestion
+                  if(tp%%5==1){ # put 5 plots in a row, first one with axes, others without
 
-                  for(tp in 1:(numCT+1)){
+                        plot(c(1:numA),rep(signalP[[1]][tp],numA),
+                              type="l", col=COLORS[1], lwd=2,
+                              yaxt="n", ylim=c(ylow,yhigh), ylab="", xlab="aa position", cex.lab=2,
+                              axes=FALSE)
+                        if(tp==1){title("time point 0", cex.main=2)
+                        } else {title(paste("time point",time_comp[tp-1,2],' - ',time_comp[tp-1,1]), cex.main=2)}
 
-                        if(tp%%5==1){
+                        axis(side=1, at=seq(1,numA,2), labels=seq(1,numA,2))
+                        axis(side=2, at=seq(ylow,yhigh,length.out=5), las=1)
+                        mtext("signal deviation", side=2, line=4, at=maxline*0.5, cex=1.3)
 
-                              plot(c(1:numA),rep(signalP[[dg]][[1]][tp],numA),
-                                    type="l", col=COLORS[1], lwd=2,
-                                    yaxt="n", ylim=c(ylow[[dg]],yhigh[[dg]]), ylab="", xlab="aa position", cex.lab=2,
-                                    axes=FALSE)
-                              if(tp==1){title("time point 0", cex.main=2)
-                              }else{title(paste("time point",timepoints[tp-1,2],' - ',timepoints[tp-1,1]), cex.main=2)}
+                  } else {
 
-                              axis(side=1, at=seq(1,numA,2), labels=seq(1,numA,2))
-                              axis(side=2, at=seq(ylow[[dg]],yhigh[[dg]],length.out=5), las=1) #TODO good for every dataset?
-                              mtext("signal deviation", side=2, line=4, at=maxline*0.5, cex=1.3)
+                        plot(c(1:numA),rep(signalP[[1]][tp],numA),
+                              type="l", col=COLORS[1], lwd=2,
+                              yaxt="n", ylim=c(ylow,yhigh), ylab="", xlab="aa position", cex.lab=2,
+                              axes=FALSE,
+                              main=paste("time point",time_comp[tp-1,2],' - ',time_comp[tp-1,1]), cex.main=2)
+                        axis(1, at=seq(1,numA,2), labels=seq(1,numA,2))
 
-                              mtext(sprintf("Digestion %s",dg), side=3, line=-1, outer=TRUE, cex=2.3, font=2)
+                  }
 
-                        } else {
+                  for (rp in 1:numR){ # over replicates
 
-                              plot(c(1:numA),rep(signalP[[dg]][[1]][tp],numA),
-                                    type="l", col=COLORS[1], lwd=2,
-                                    yaxt="n", ylim=c(ylow[[dg]],yhigh[[dg]]), ylab="", xlab="aa position", cex.lab=2,
-                                    axes=FALSE,
-                                    main=paste("time point",timepoints[tp-1,2],' - ',timepoints[tp-1,1]), cex.main=2)
-                              axis(1, at=seq(1,numA,2), labels=seq(1,numA,2))
+                        lines(c(1:numA),rep(signalP[[rp]][tp],numA), type="l", col=COLORS[rp], lwd=2)
 
-                        }
+                        for(aa in 1:numA){ # over amino acids
+                              
+                              if(!sum(ppm[,aa])==0){ # only plot those which are present in some product
 
-                        for (rp in 1:numR){
+                                    # amount is post * signalF * ppm, sum over all products
+                                    amount = apply(sweep(sweep(post, MARGIN=2, signalF[[rp]][,tp], `*`,check.margin=FALSE), MARGIN=2, ppm[,aa], '*',check.margin=FALSE), MARGIN=1, sum)
 
-                              lines(c(1:numA),rep(signalP[[dg]][[rp]][tp],numA), type="l", col=COLORS[rp], lwd=2)
-
-                              for(aa in 1:numA){
-                                    
-                                    if(!sum(ppm[[dg]][,aa])==0){ # only plot those which are present in some product
-
-                                          amount = apply(sweep(sweep(post, MARGIN=2, signalF[[dg]][[rp]][,tp], `*`,check.margin=FALSE), MARGIN=2, ppm[[dg]][,aa], '*',check.margin=FALSE), 1,sum)
-      
-                                          if(dg==1){
-                                                Quant <- quantile(amount, probs = c(0.05, 0.5, 0.95))
-                                                points(aa, Quant['50%'], col=COLORS[rp], pch=20)
-                                                segments(aa, Quant['5%'], aa, Quant['95%'], col=adjustcolor(COLORS[rp],alpha.f=0.5), lwd=0.01)
-      
-                                          } else {
-                                                boxplot(amount/mean(post[,dg-1]), at=aa, add=TRUE, col=COLORS[rp], outline=FALSE, axes=FALSE) #TODO
-                                          }
-                                    }
-                              } # end aa
-                        } # end rp
-                  } # end tp
-
-                  if(numD>1){plot.new()}
-
-            }
+                                      Quant <- quantile(amount, probs = c(0.05, 0.5, 0.95))
+                                      points(aa, Quant['50%'], col=COLORS[rp], pch=20)
+                                      segments(aa, Quant['5%'], aa, Quant['95%'], col=adjustcolor(COLORS[rp],alpha.f=0.5), lwd=0.01)
+                              }
+                        } # end aa
+                  } # end rp
+            } # end tp
 
             dev.off()
 
@@ -151,13 +147,13 @@ plotChain <- function(chain){
 ####################################################################################################
 ######## SUMMARY OF PARAMETER DISTRIBUTION
 
-summarize <- function(chain){
+summarize <- function(ch){
       
       ####################
       ### STATISTICS OF THE PARAMETERS
       
-      Stats <- cbind(t(boxplot(chain, plot=FALSE)$stats), colMeans(chain), colSds(chain))
-      Stats <- cbind(matrix(c(as.vector(data[[1]][[1]][-1,1]),'sigma','pun')), Stats)
+      Stats <- cbind(t(boxplot(ch, plot=FALSE)$stats), colMeans(ch), colSds(ch))
+      Stats <- cbind(matrix(c(as.vector(dat[[1]][-1,1]),'sigma','pun')), Stats)
       colnames(Stats) <- c('parameter','min','lower_quartile','median','upper_quartile','max', 'mean', 'standard_deviation')
       write.csv(Stats, 'statistics.csv', quote=FALSE, row.names=FALSE)
       cat("\tStatistical summary in statistics.csv\n")
@@ -165,263 +161,290 @@ summarize <- function(chain){
       ####################
       ### PLOT SUMMARY OF PARAMETERS
       
-      chain_pep = chain[, -c(dim(chain)[2],dim(chain)[2]-1)]
+      chain_pep = ch[, -c(dim(ch)[2],dim(ch)[2]-1)]
       
-      pdf("boxplot_chain.pdf", width=10, height=15) #TODO split plot multipage for many products
-      # postscript("boxplot_chain.ps", width=10, height=20) #TODO achse wieder gestaucht
+      pdf("statistics.pdf", width=11.7, height=8.3)
+      par(mar=c(5,7,5,3)) # bottom, left, top, and right
       
-      boxplot(chain_pep, at=seq(1,numP,1), col="blue", 
-              xlim = c(0,numP+1), ylab="", ylim=c(0, max(chain_pep)), axes=FALSE, 
-              horizontal=TRUE, varwidth=TRUE, outline=FALSE)
-      box()
-      axis(1, xlim=c(0, max(chain_pep)),col="blue",col.axis="blue", las=1)
-      mtext("conversion factor",side=1,line=2.5, col="blue")
-      title("Distribution of conversion factors of all products", line=1.5, cex=1.2, font=2)
-      
-      axis(2,seq(1,numP))
-      mtext("products",side=2,col="black",line=2.5) 
-      
-      abline(h=1:numP, col="gray", lty=3)
-      
-      if(QMEold==TRUE){ #TODO
-            points(old, seq(1,numP), col='green')
+      if(dim(chain_pep)[2]<50){
+
+            boxplot(chain_pep, at=seq(1,numP,1), 
+                  xlim = c(0,numP+1), ylim=c(conv_lower, conv_upper), las=1, log="y",
+                  col="blue", varwidth=TRUE, outline=FALSE)
+            
+            title(main = "Distribution of conversion factors of all products", line=2)     
+            title(ylab = "conversion factor (log10-scale)", line=4.5)
+            title(xlab = "peptide products", line=2.5) 
+            
+            abline(v=1:numP, col="gray", lty=3)
+           
+      } else {
+            num_pages <- ceiling(numP/50)
+            
+            # all but last page
+            for(page in 1:(num_pages-1)){ 
+                  boxplot(chain_pep[,seq(50*(page-1)+1,50*page)], at=seq(50*(page-1)+1,50*page),
+                        xlim = c(50*(page-1),50*page+1), ylim=c(conv_lower, conv_upper), las=1, log="y", xaxt="n",
+                        col="blue", varwidth=TRUE, outline=FALSE)
+                  
+                  axis(1, at=seq(50*(page-1)+1,50*page), labels=seq(50*(page-1)+1,50*page))
+                  title(main = "Distribution of conversion factors of all products", line=2)     
+                  title(ylab = "conversion factor (log10-scale)", line=4.5)
+                  title(xlab = "peptide products", line=2.5) 
+                  
+                  abline(v=seq(50*(page-1)+1,50*page), col="gray", lty=3)
+            }
+            # last page
+            rest <- numP - 50*(num_pages-1)+1 -1
+            boxplot(chain_pep[,seq(50*(num_pages-1)+1,numP)], at=seq(50*(num_pages-1)+1,numP),
+                  xlim = c(50*(num_pages-1),numP+1), ylim=c(conv_lower, conv_upper), las=1, log="y", xaxt="n",
+                  col="blue", varwidth=TRUE, outline=FALSE)
+
+            axis(1, at=seq(50*(num_pages-1)+1,numP), labels=seq(50*(num_pages-1)+1,numP))
+            title(main = "Distribution of conversion factors of all products", line=2)     
+            title(ylab = "conversion factor (log10-scale)", line=4.5)
+            title(xlab = "peptide products", line=2.5) 
+            
+            abline(v=seq(50*(num_pages-1)+1,numP), col="gray", lty=3)
       }
       
       dev.off()
       
-      cat("\tDistributions of conversion factors in boxplot_chain.pdf\n")
+      cat("\tDistributions of conversion factors in summary.pdf\n")
 }
 
-####################################################################################################
-######## PLOT RELATION OF CONVERSION FACTOR AND PEPTIDE LENGTH
-
-plot_length <- function(chain){ #TODO test
-      len = seq(1:numA)
-      seq = data[[1]][[1]][-1,1]
-      # COLORS = rainbow()
-      png("relation.png")
-      par(mar=c(5,7,5,3))
-      plot(0,0, col='white', xlim=c(0,numA), ylim=c(0,max(chain)), xlab="peptide length", ylab="", las=1)
-      for(pep in 1:numP){
-            Quant <- quantile(chain[,pep], probs = c(0.05, 0.5, 0.95))
-            points(nchar(as.character(seq[pep])), Quant['50%'], col='blue', pch=20)
-            segments(nchar(as.character(seq[pep])), Quant['5%'], nchar(as.character(seq[pep])), Quant['95%'], col=adjustcolor('blue',alpha.f=0.5), lwd=1)
-      }
-      title(main="Relation of conversion factor to peptide length")
-      title(ylab="conversion factor", line = 4.5)
-      dev.off()
-}
-
-####################################################################################################
-######## PLOT MAXIMUM LIKELIHOOD
-
-plotmaxlike <- function(Pmax, sigma_plotmaxlike, punplotmaxlike){
-      
-      cat("\nPLOTTING MAXIMUM LIKELIHOOD...\n")
-      
-      p1 = seq(0,Pmax,Pmax/20)
-      p2 = seq(0,Pmax,Pmax/20)
-      p3 = seq(0,Pmax,Pmax/20)
-      p4 = seq(0,Pmax,Pmax/20)
-      
-      M = array(NA,c(length(p1),length(p2),length(p3),length(p4)))
-      
-      for (i in 1:length(p1)){
-            if((i/10-i%/%10)==0){
-                  print(length(p1)-i-1)
-            }
-            for (j in 1:length(p2)){
-                  for (k in 1:length(p3)){
-                        for (l in 1:length(p4)){
-                              M[i,j,k,l] = likelihood(param=c(p1[i],p2[j],p3[k],p4[l],sigma_plotmaxlike, pun_plotmaxlike))[[1]]
-                        }
-                  }
-            }
-      }
-      
-      png("maxlike.png")
-      scp <- scatterplot3d(which(M[,,,1]>=max(round(M)-0.5),arr.ind=TRUE), type='l', lwd=10, color=rainbow(1),
-                           angle=60, main='4D maximal likelihood', box=TRUE, grid=TRUE, y.margin.add=2,
-                           lab=c(7,7,1), lab.z=c(7,1), asp=1, scale.y=0.6, mar=c(3.5,3.5,4,2),
-                           xlim=c(0,20.2), ylim=c(0,20.2), zlim=c(0,20.2),
-                           x.ticklabs=seq(0,Pmax,Pmax/5), y.ticklabs=seq(0,Pmax,Pmax/5), z.ticklabs=seq(0,Pmax,Pmax/5),
-                           xlab='param 1', ylab='', zlab='param 3', las=1)
-      for (l in 2:length(p4)){
-            scp_p <- scp$points3d(which(M[,,,l]>=max(round(M)-0.5),arr.ind=TRUE), type='l', lwd=10, col=rainbow(length(p4))[l])
-      }
-      legend.gradient(pnts=cbind(x =c(7.5,6.5,6.5,7.5), y =c(5,5,4,4)),cols=rainbow(length(p4)), limits=c(0,1), title='param 4')
-      text(x=6.5, y=0.7, 'param 2', srt=60)
-      
-      dev.off()
-      
-} # end plotmaxlike
 
 ####################################################################################################
 ######## PROVIDE CONCENTRATIONS
 
 # calculates the absolute concentrations resulting from input data using output conversion factors
 
-concentrations <- function(chain){
+concentrations <- function(ch){
       
       cat("\nCALCULATING ABSOLUTE CONCENTRATIONS...\n")
       
-      ####################
-      ### FITTING TITRATION DATA
+      if (!file.exists('concentrations')){
+            dir.create('concentrations')
+      }
+      if (!file.exists('plots_concentrations')){
+            dir.create('plots_concentrations')
+      }
       
-      if(titr_given==TRUE){
-
+      ####################
+      ### SUBSTRATE CONCENTRATION
+      
+      if(exists('titr')){
+            cat(sprintf("... using substrate titration from file %s\n ", titr))
+            # subs_titr defined in inputparser
+            # fit titration before matching with kinetics
+            subs_titr_means <- rowMeans(subs_titr[,-1])
+            subs_titr_means <- cbind(subs_titr[1],subs_titr_means)
+            colnames(subs_titr_means) = c('amount', 'intensity')
+            
+            COLORS = rainbow(numR)
+            titr_coeff = numeric()
+            plotfct('substratetitration_given', width=5, height=5)
+			par(mar=c(5,7,5,3)) # bottom, left, top, and right
+            ymax = max(subs_titr_means['intensity'], subs_titr_means['intensity'])
+            fit = lm(intensity ~ amount, subs_titr_means)
+            titr_coeff = rbind(titr_coeff,as.numeric(unlist(coefficients(fit))))
+            cat("Linear fit of the substrate titration before normalization:\n")
+            cat(sprintf("\tintercept: %s, slope: %s\n",titr_coeff[1],titr_coeff[2]))
+            plot(as.numeric(unlist(subs_titr_means['amount'])), as.numeric(unlist(subs_titr_means['intensity'])), ylim=c(0,ymax), col=COLORS[rp], type='o', xlab='', ylab='', las=1)
+            abline(fit)
+			title(xlab = 'concentration', line=3)
+			title(ylab = 'signal intensity', line=5)
+			title(main = 'substrate titration as provided', line=2)
+            dev.off()
+            
+            titr_intercept_before = colMeans(titr_coeff)[1]
+            titr_slope_before = colMeans(titr_coeff)[2]
+            signal_required <- titr_slope_before * loaded + titr_intercept_before
+			cat(sprintf('Using this fit, the signal for amount loaded %s is %s\n',loaded,signal_required))
+      
+            # use signal_required to match titration data and signal kinetics, for every replicate
+			subs_kin <- times
+			for(rp in 1:numR){
+				  subs_kin <- cbind(subs_kin, as.numeric(dat[[rp]][1,-1]))
+			}
+            normconst <- list()
+            titration <- data.frame(subs_titr_means[,1])
+            for(rp in 1:numR){
+                  normconst[[rp]] <- signal_required/subs_kin[1,rp+1]
+                  titration <- data.frame(cbind(titration, subs_titr_means[,2]/normconst[[rp]]))
+            }
+            
+            # now fit titration after matching with kinetics
             titr_list = list()
             for(rp in 2:dim(titration)[2]){
                   titr_list[[rp-1]] <- cbind(titration[1],titration[rp])
                   colnames(titr_list[[rp-1]]) = c('amount', 'intensity')
             }
             
+            fit_sigmoidal <- FALSE
             titr_coeff = numeric()
+            plotfct('substratetitration_normalized', width=5, height=5)
+			par(mar=c(5,7,5,3)) # bottom, left, top, and right
+            ymax = max(titr_list[[1]]['intensity'], titr_list[[2]]['intensity'])
             for(rp in 1:length(titr_list)){
-                  if(fit_sigmoidal==TRUE){
-                        fit = nls(intensity ~ SSlogis(amount, Asym, xmid, scal), data = titr_list[[rp]]) #Asym/(1+exp((xmid-input)/scal))
-                  } else {
-                        fit = lm(amount ~ intensity, titr_list[[rp]])
-                  }
+                  fit = lm(intensity ~ amount, titr_list[[rp]])
                   titr_coeff = rbind(titr_coeff,as.numeric(unlist(coefficients(fit))))
-            }
-            titr_intercept = colMeans(titr_coeff)[1]
-            titr_slope = colMeans(titr_coeff)[2]
-            
-            #TODO sigmoidal fit: get coeff - get means, sd - get concentrations
-      }
-      
-      ####################
-      ### CALCULATING ABSOLUTE CONCENTRATIONS
-      
-      samp = sample(dim(chain)[1], 1000, replace = FALSE) #TODO ohne burnin
                   
-      conc_means <- list()
-      conc_sd <- list()
-      for(dg in 1:numD){ #TODO testen mit numD>1!!!
-            conc_means[[dg]] = list()
-            conc_sd[[dg]] = list()
-            
-            for(rp in 1:numR){
-                  conc_means[[dg]][[rp]] = matrix(,nrow=0,ncol=dim(data[[dg]][[rp]])[2])
-                  conc_sd[[dg]][[rp]] = matrix(,nrow=0,ncol=dim(data[[dg]][[rp]])[2])
-                  
-                  for(pep in 1:numP){
-                        conc = matrix(,nrow=0,ncol=dim(data[[dg]][[rp]][pep,-1])[2])
-                        
-                        for(sam in 1:length(samp)){
-                              conc_tmp = tryCatch( as.numeric(data[[dg]][[rp]][pep+1,-1] * chain[samp[sam],pep] * 1/titr_slope - titr_intercept), # concentrations with titration data
-                                               error = function(e) { as.numeric(data[[dg]][[rp]][pep+1,-1] * chain[samp[sam],pep]) }) # concentrations without titration data
-                              conc =  rbind(conc, conc_tmp)
-                        }
-
-                        conc_means[[dg]][[rp]] = rbind(conc_means[[dg]][[rp]], c(as.vector(data[[dg]][[rp]][pep+1,1]), colMeans(conc)))
-                        conc_sd[[dg]][[rp]] = rbind(conc_sd[[dg]][[rp]], c(as.vector(data[[dg]][[rp]][pep+1,1]), colSds(conc)))
-                        
-                  } # end pep
-            } # end rp
-      } # end dg
-      
-      for(dg in 1:numD){ #TODO testen mit numD>1!!!
-            for(rp in 1:numR){
-                  colnames(conc_means[[dg]][[rp]]) = c('sequence', seq(0,numT-1,1))
-                  write.csv(conc_means[[dg]][[rp]], sprintf('conc_means_%s.csv',rp), row.names=FALSE, quote=FALSE)
-                  
-                  colnames(conc_sd[[dg]][[rp]]) = c('sequence', seq(0,numT-1,1))
-                  write.csv(conc_sd[[dg]][[rp]], sprintf('conc_sd_%s.csv',rp), row.names=FALSE, quote=FALSE)
-            }
-      }
-      cat("Means and standard deviations of absolute concentrations in conc_means.csv and conc_sd.csv\n")
-
-      ####################
-      ### PLOT KINETICS
-      
-      if (!file.exists(sprintf('plots_kinetics_%s',ID))){
-            dir.create(sprintf('plots_kinetics_%s',ID))
-      }
-      
-      COLORS = rainbow(numR)
-      for(dg in 1:numD){ #TODO testen mit numD>1!!!
-            
-            ### SUBSTRATE
-            # png(normalizePath(paste(sprintf('plots_kinetics_%s',ID), sprintf('peptide%s.png',pep), sep='/'), winslash="\\", mustWork=TRUE))
-            png(paste(sprintf('plots_kinetics_%s',ID), sprintf('substrate.png'), sep='/'))
-            par(mar=c(5,7,5,3)) # bottom, left, top, and right
-            
-            ymin = min(data[[dg]][[1]][1,-1])
-            ymax = max(data[[dg]][[1]][1,-1])
-            for(rp in 1:numR){
-                  if(min(data[[dg]][[rp]][1,-1]) < ymin){ ymin = min(data[[dg]][[rp]][1,-1]) }
-                  if(max(data[[dg]][[rp]][1,-1]) > ymax){ ymax = max(data[[dg]][[rp]][1,-1]) }
-            }
-            for(rp in 1:numR){
-                  plot(seq(1,numT,1), data[[dg]][[rp]][1,-1], ylim=c(ymin,ymax), xlab='time', ylab='', main='substrate', type='l', lwd=2, col=COLORS[rp], las=1)
+                  plot(as.numeric(unlist(titr_list[[rp]]['amount'])), as.numeric(unlist(titr_list[[rp]]['intensity'])), ylim=c(0,ymax), col=COLORS[rp], type='o', xlab='', ylab='', las=1)
+                  abline(fit)
                   par(new=TRUE)
             }
-            title(ylab = "concentration", cex.lab = 1, line = 4.5)
+			title(xlab = 'concentration', line=3)
+			title(ylab = 'signal intensity', line=5)
+			title(main = 'normalized substrate titration', line=2)
             dev.off()
+            titr_intercept = colMeans(titr_coeff)[1]
+            titr_slope = colMeans(titr_coeff)[2]
+            cat("Linear fit of the substrate titration after normalization, mean over replicates:\n")
+			cat(sprintf("\tintercept: %s, slope: %s\n", titr_intercept,titr_slope))
             
-            ### PRODUCTS
-            for(pep in 1:numP){
-                  
-                  ymin = min(as.numeric(conc_means[[dg]][[1]][pep,-1]))
-                  ymax = max(as.numeric(conc_means[[dg]][[1]][pep,-1]))
-                  for(rp in 1:numR){
-                        # X = conc_means[[dg]][[rp]][pep,length(conc_means[[dg]][[rp]][pep,])] + conc_sd[[dg]][[rp]][pep,length(conc_sd[[dg]][[rp]][pep,])] #TODO not last timepoint but highest
-                        X = as.numeric(conc_means[[dg]][[rp]][pep,-1]) + as.numeric(conc_sd[[dg]][[rp]][pep,-1]) #TODO not last timepoint but highest
-
-                        if(min(X) < ymin){ ymin = min(X) }
-                        if(max(X) > ymax){ ymax = max(X) }
-                  }
-            
-                  # png(normalizePath(paste(sprintf('plots_kinetics_%s',ID), sprintf('peptide%s.png',pep), sep='/'), winslash="\\", mustWork=TRUE))
-                  png(paste(sprintf('plots_kinetics_%s',ID), sprintf('peptide%s.png',pep), sep='/'))
-                  par(mar=c(5,7,5,3))
-                  for(rp in 1:numR){
-                        x = seq(0,numT-1)
-                        y = as.numeric(conc_means[[dg]][[rp]][pep,-1])
-                        sd = as.numeric(conc_sd[[dg]][[rp]][pep,-1])
-                        plot(x, y, ylim=c(ymin,ymax), xlab='time', ylab='', main=paste('peptide ',pep), type='o', col=COLORS[rp], las=1)
-                        polygon(c(x,rev(x)), c(y+sd,rev(y-sd)), col=COLORS[rp], density=50, border=NA)
-                        par(new=TRUE)
-                  }
-                  title(ylab="concentration", line=4.5)
-                  dev.off()
-            } # end pep
-      } # end dg
-      cat("Plots of the kinetics in folder plots_kinetics\n")
-      
-} # end concentrations
-
-####################################################################################################
-######## MASS DEVIATION PLOTS
-
-massdevplot <- function(massdev){
-      
-      cat("\nPLOTTING IMPROVEMENT OF TOTAL MASS DEVIATION...\n")
-      
-      png('massdeviation.png')
-      # postscript('massdeviation.png')
-      plot(massdev,type='l', ylim=c(0, max(massdev)),
-           main="total mass deviation", xlab='iterations', ylab='mass deviation', las=1)
-      
-      if(QMEold==TRUE){
-            massdev_QME = 0
-            for(aa in a0:numA){ # over amino acids
-                  for (rp in 1:numR){ # over replicates
-                        amount = sum(old * signalF[[dg]][[rp]][,numT] * scalefac1/scalefac2 * ppm[[dg]][,aa]) #TODO richtig so?
-                        massdev_QME = massdev_QME + abs(amount-signalP[[dg]][[rp]][numT])
-
-                  }
+            # amount of substrate loaded for every replicate, loaded given by userinput
+            loaded_vec <- list()
+            for(rp in 1:numR){
+                  loaded_vec[[rp]] <- loaded
             }
-            points(length(massdev), massdev_QME, pch=19)
-            text(length(massdev), massdev_QME, labels='QMEold', cex= 1, pos=2)
+      } else {
+            cat("WARNING: No substrate titration provided. Only calculating normalized signals!\n")
+            
+            # "amount" of substrate loaded here is the initial intensity
+            loaded_vec <- list()
+            for(rp in 1:numR){
+                  loaded_vec[[rp]] = dat[[rp]][1,2]
+            }
       }
+      
+      # substrate concentration
+      subs_conc <- list()
+      for(rp in 1:numR){
+            subs_conc[[rp]] = tryCatch( dat[[rp]][1,-1] * 1/titr_slope - titr_intercept/titr_slope, # concentrations with titration data
+                                    error = function(e) { dat[[rp]][1,-1] }) # concentrations without titration data
+            # save substrate concentration to csv
+            write.csv(subs_conc[[rp]], file.path(paste('concentrations', sprintf('substrate_%s.csv',rp), sep='/'), fsep = .Platform$file.sep), row.names=FALSE, quote=FALSE)
+      }
+      
+      # plot substrate degradation
+      plotfct(file.path(paste('plots_concentrations','substrate', sep='/'), fsep = .Platform$file.sep), width=5, height=5)
+      par(mar=c(5,7,5,3)) # bottom, left, top, and right
+      ymax = max(unlist(lapply(subs_conc,max)))
+      plot(times, subs_conc[[1]], type='o', col=COLORS[1], ylim=c(0,ymax), las=1, xlab='', ylab='')
+      if(numR>1){
+            for(rp in 2:numR){
+                  par(new=TRUE)
+                  plot(times, subs_conc[[rp]], type='o', col=COLORS[rp], ylim=c(0,ymax), las=1, xlab='', ylab='')
+            }
+      }
+      title(xlab = 'time', line=3)
+      title(ylab = 'concentration', line=5)
+      title(main = 'substrate degradation', line=2)
       dev.off()
       
-      cat("Plot of total mass deviation in massdeviation.png\n")
-      if(QMEold==TRUE){ cat(paste0("Total mass deviation of QME: ", massdev_QME, "\n")) }
+      # plot substrate degraded
+      plotfct(file.path(paste('plots_concentrations','substrate_degraded', sep='/'), fsep = .Platform$file.sep), width=5, height=5)
+      par(mar=c(5,7,5,3)) # bottom, left, top, and right
+      ymax = max(unlist(lapply(subs_conc,max)))
+      plot(times, abs(subs_conc[[1]]-loaded_vec[[1]]), type='o', col=COLORS[1], ylim=c(0,ymax), las=1, xlab='', ylab='')
+      if(numR>1){
+            for(rp in 2:numR){
+                  par(new=TRUE)
+                  plot(times, abs(subs_conc[[rp]]-loaded_vec[[rp]]), type='o', col=COLORS[rp], ylim=c(0,ymax), las=1, xlab='', ylab='')
+            }
+      }
+      title(xlab = 'time', line=3)
+      title(ylab = 'concentration', line=5)
+      title(main = 'substrate degraded', line=2)
+      dev.off()
+      
+      ####################
+      ### PRODUCT CONCENTRATIONS
+      
+      samp = sample(dim(ch)[1], 1000, replace = FALSE) #TODO what if Niter < 1000 ?
+      
+      # calculate 0.05, 0.5, 0.95 quantiles based on parameter distributions and substrate titration
+      conc_median = list()
+      conc_five = list()
+      conc_ninetyfive = list()
+      
+      for(rp in 1:numR){
+            conc_median[[rp]] = matrix(,nrow=0,ncol=dim(dat[[rp]])[2])
+            conc_five[[rp]] = matrix(,nrow=0,ncol=dim(dat[[rp]])[2])
+            conc_ninetyfive[[rp]] = matrix(,nrow=0,ncol=dim(dat[[rp]])[2])
+            
+            for(pep in 1:numP){
+                  conc = matrix(,nrow=0,ncol=dim(dat[[rp]][pep,-1])[2])
+                  
+                  for(sam in 1:length(samp)){
+                        conc_tmp = tryCatch( as.numeric(dat[[rp]][pep+1,-1] * ch[samp[sam],pep] * 1/titr_slope - titr_intercept), # concentrations with titration data
+                                          error = function(e) { as.numeric(dat[[rp]][pep+1,-1] * ch[samp[sam],pep]) }) # concentrations without titration data
+                              
+                        conc =  rbind(conc, conc_tmp)
+                  }
+                  Quant <- apply(conc, 2, function(x){ quantile(x, probs = c(0.05, 0.5, 0.95)) })
+                  conc_median[[rp]] = rbind(conc_median[[rp]], c(as.vector(dat[[rp]][pep+1,1]), Quant['50%',]))
+                  conc_five[[rp]] = rbind(conc_five[[rp]], c(as.vector(dat[[rp]][pep+1,1]), Quant['5%',]))
+                  conc_ninetyfive[[rp]] = rbind(conc_ninetyfive[[rp]], c(as.vector(dat[[rp]][pep+1,1]), Quant['95%',]))
+                  
+            } # end pep
+      } # end rp
+      
+      # move to zero
+      for(rp in 1:numR){
+            for(pep in 1:numP){
+                  conc_median[[rp]][pep,-1] <- as.numeric(conc_median[[rp]][pep,-1]) - as.numeric(conc_median[[rp]][pep,-1][1])
+                  conc_five[[rp]][pep,-1] <- as.numeric(conc_five[[rp]][pep,-1]) - as.numeric(conc_five[[rp]][pep,-1][1])
+                  conc_ninetyfive[[rp]][pep,-1] <- as.numeric(conc_ninetyfive[[rp]][pep,-1]) - as.numeric(conc_ninetyfive[[rp]][pep,-1][1])
+            }
+      }
+      
+      # save products concentrations to csv
+      for(rp in 1:numR){
+            colnames(conc_median[[rp]]) = c('sequence', times)
+            write.csv(conc_median[[rp]], file.path(paste('concentrations', sprintf('conc_median_%s.csv',rp), sep='/'), fsep = .Platform$file.sep), row.names=FALSE, quote=FALSE)
+            
+            colnames(conc_five[[rp]]) = c('sequence', times)
+            write.csv(conc_five[[rp]], file.path(paste('concentrations', sprintf('conc_five_%s.csv',rp), sep='/'), fsep = .Platform$file.sep), row.names=FALSE, quote=FALSE)
+            
+            colnames(conc_ninetyfive[[rp]]) = c('sequence', times)
+            write.csv(conc_ninetyfive[[rp]], file.path(paste('concentrations', sprintf('conc_ninetyfive_%s.csv',rp), sep='/'), fsep = .Platform$file.sep), row.names=FALSE, quote=FALSE)
+      }
+	cat("Substrate and product amounts:\n")
+	cat("\tNumeric values in folder 'concentrations'.\n")
+      
+      # plot product concentration kinetics
+      for(pep in 1:numP){
+      
+            plotfct(file.path(paste('plots_concentrations', sprintf('peptide%s',pep), sep='/'), fsep = .Platform$file.sep), width=5, height=5)
+            par(mar=c(5,7,5,3))
+            
+            # get y limits
+            ymin = min(as.numeric(conc_five[[1]][pep,-1]), na.rm=T)
+            ymax = max(as.numeric(conc_ninetyfive[[1]][pep,-1]), na.rm=T)
+            for(rp in 1:numR){
+                  if(min(as.numeric(conc_five[[rp]][pep,-1]), na.rm=T) < ymin){ ymin = min(as.numeric(conc_five[[rp]][pep,-1])) }
+                  if(max(as.numeric(conc_ninetyfive[[rp]][pep,-1]), na.rm=T) > ymax){ ymax = max(as.numeric(conc_ninetyfive[[rp]][pep,-1])) }
+            }
+            
+            # plot median and 0.05-0.95 quantile shaded area
+            for(rp in 1:numR){
+                  y = as.numeric(conc_median[[rp]][pep,-1])
+                  five = as.numeric(conc_five[[rp]][pep,-1])
+                  ninetyfive = as.numeric(conc_ninetyfive[[rp]][pep,-1])
+                  plot(times, y, ylim=c(as.numeric(ymin),as.numeric(ymax)), xlab='', ylab='', main='', type='o', pch=19, lwd=2, col=COLORS[rp], las=1)
+                  polygon(c(times,rev(times)), c(ninetyfive,rev(five)), col=COLORS[rp], density=30, border=NULL)
+                  par(new=TRUE)
+            }
+            title(xlab='time', line=2.5)
+            title(ylab="concentration", line=5)
+            title(main=paste('peptide ',pep), line=2)
+            dev.off()
+      } # end pep
 
-} # end massdevplot
+	cat("\tKinetic plots in folder 'plots_concentrations'.\n")
+      
+} # end concentrations
 
 } # end file
