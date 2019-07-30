@@ -76,7 +76,7 @@ structure (see Sections 2.3.1 and 2.3.2  of the documentation for more details)
 **5.** The QPuB main script is executed using flags:
 
 ```sh
-  $ Rscript -file -infol -outfol -titr
+  $ Rscript <name or path to runQPuB.r> -infol -outfol -titr
 ```
 
 QPuB is equipped with facilities to accept and parse command line
@@ -84,7 +84,7 @@ arguments, where
 
 |                          |                                                                               |
 | :----------------------- | :---------------------------------------------------------------------------- |
-| <span>**-file**</span>   | name/path of the <span>**runQPuB.r**</span>. This input is mandatory.         |
+| <span>**name or path to runQPuB.r**</span>   | name/path of the <span>**runQPuB.r**</span>. This input is mandatory.         |
 | <span>**-infol**</span>  | name/path of the <span>**input folder**</span>. This input is mandatory.      |
 | <span>**-outfol**</span> | userdefined name of the **output folder**. This input is optional.            |
 | <span>**-titr**</span>   | name of the <span>**titration data**</span> csv-file. This input is optional. |
@@ -94,12 +94,11 @@ Flags can be specified as `-infol inputfolder` or `--infol=inputfolder`.
 Depending on your working directory, you also have to provide the path
 to the runQPuB.r file:
 
-1.  working directory is QPuB directory: `-file runQPuB.r`
+1.  working directory is QPuB directory: `runQPuB.r`
 
-2.  working directory is somewhere else: `-file path\QPuB\runQPuB.r`
+2.  working directory is somewhere else: `path\QPuB\runQPuB.r`
 
-Note, that the flag `-file` for the R script can also be omitted. The
-first argument will always be taken as the name of the R script:
+The first argument will always be taken as the name of the R script:
 `Rscript runQPuB.r`.
 
 Depending on the location of the input folder, you also have to provide
@@ -117,13 +116,13 @@ the path to the folder:
    ### Example 1: Endopeptidase digestion without noise
    ```sh     
        
-       Rscript -file ./QPuB/runQPuB.r -infol examples/toy_nonoise
+       Rscript ./QPuB/runQPuB.r -infol examples/toy_nonoise
    
  ``` 
    ### Example 2: Endopeptidase digestion with noise  
   ```sh     
        
-        Rscript -file ./QPuB/runQPuB.r -infol examples/toy_noise
+        Rscript ./QPuB/runQPuB.r -infol examples/toy_noise
    
  ``` 
  ## Output of QPuB
@@ -145,7 +144,7 @@ the path to the folder:
    
  ## Documentation
  
-      A PDF version of the documentation will be soon added to the repository
+   A PDF version of the documentation is available at [Documentation](Documentation.pdf)
  
  ## Developers
                
