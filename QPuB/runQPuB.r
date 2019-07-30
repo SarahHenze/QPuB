@@ -48,7 +48,8 @@ if(dirname(file)=='.'){
 }
 
 # get path of input folder
-if(dirname(infol)=='.'){
+if(dirname(infol)=='.'){ # if only folder name provided
+
       ID <- infol
       path <- dirname(path_qpub)
       if(file.exists(file.path(paste(path,ID,sep='/'), fsep = .Platform$file.sep))){ # try directory of QPuB folder
@@ -56,9 +57,21 @@ if(dirname(infol)=='.'){
       } else {
             stop(sprintf("Cannot find input folder '%s'. Typo? Otherwise, please provide path of the folder.",infol))
       }
-} else { 
-      path <- dirname(infol)
-      ID <- basename(infol)
+} else if(grepl('/', infol)){ # if short path is provided
+
+	ID <- unlist(strsplit(infol, "/"))[2]
+    path <- dirname(path_qpub)
+	shortpath <- unlist(strsplit(infol, "/"))[1]
+	path <- file.path(paste(path,shortpath, sep='/'), fsep = .Platform$file.sep)
+      if(file.exists(file.path(paste(path,ID,sep='/'), fsep = .Platform$file.sep))){ # try directory of QPuB folder
+            infol <- file.path(paste(path,ID,sep='/'), fsep = .Platform$file.sep)
+      } else {
+            stop(sprintf("Cannot find input folder '%s'. Typo? Otherwise, please provide path of the folder.",infol))
+      }
+
+} else { # if full path is provided
+     path <- dirname(infol)
+     ID <- basename(infol)
 }
 
 cat(paste0("\nPath of QPuB: ", path_qpub, "\n"))
