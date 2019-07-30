@@ -18,6 +18,8 @@ In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0
 * [**R.utils**](https://cran.r-project.org/web/packages/R.utils/index.html)
    
 * [**tictoc**](https://cran.r-project.org/web/packages/tictoc/index.html) 
+
+* [**sys**](https://cran.r-project.org/web/packages/sys/index.html) 
    
 * [**mcmcse**](https://cran.r-project.org/web/packages/mcmcse/index.html) 
    
@@ -25,7 +27,7 @@ In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0
 
 * [**corpcor**](https://cran.r-project.org/web/packages/corpcor/index.html) 
    
-* [**dqRNGkind**](https://www.rdocumentation.org/packages/dqrng/versions/0.2.1/topics/dqRNGkind) 
+* [**dqrng**](https://www.rdocumentation.org/packages/dqrng/index.html) 
    
 * [**coda**](https://cran.r-project.org/web/packages/coda/index.html) 
 
@@ -34,8 +36,6 @@ In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0
 * [**matrixcalc**](https://www.rdocumentation.org/packages/matrixcalc) 
 
 * [**ggdmc**](https://www.rdocumentation.org/packages/ggdmc)
- 
-* [**grDevices**](https://www.rdocumentation.org/packages/grDevices) 
 
 * [**matrixStats**](https://www.rdocumentation.org/packages/matrixStats) 
 
@@ -47,7 +47,7 @@ To install the above packages, start your **R** shell, and execute the following
 Alternatively, one can copy-paste the following command in the R terminal 
 
 ```R
-install.packages(c("R.utils", "tictoc", "mcmcse", "tmvtnorm", "corpcor", "dqRNGkind", "coda", "base", "matrixcalc", "ggdmc", "grDevices", "matrixStats"))
+install.packages(c("R.utils", "tictoc", "mcmcse", "tmvtnorm", "corpcor", "dqrng", "coda", "base", "matrixcalc", "ggdmc", "sys", "matrixStats"))
  ```
 and press enter.
 
@@ -119,13 +119,13 @@ the path to the folder:
    ### Example 1: Endopeptidase digestion without noise
    ```sh     
        
-       Rscript -file ./QPuB/runQPuB.r -infol examples/toy_endo3_nonoise
+       Rscript -file ./QPuB/runQPuB.r -infol examples/toy_nonoise
    
  ``` 
    ### Example 2: Endopeptidase digestion with noise  
   ```sh     
        
-        Rscript -file ./QPuB/runQPuB.r -infol examples/toy_endo3
+        Rscript -file ./QPuB/runQPuB.r -infol examples/toy_noise
    
  ``` 
  ## Output of QPuB
@@ -134,18 +134,16 @@ the path to the folder:
    
  | File | Description |
 | ------ | ------ |
-| **boxplot\_chain.pdf** | boxplot corresponding to the distributions of conversion factors |
-| **chain\_Niter.pdf**  | trace plots of the Markov chain at **Niter**<sup>th</sup> iteration     |  
-| **chain\_XYZ.RData** | tores trace of the Markov chain or the time series of the parameter draws   |
-| **chain\_backscaled.RData** | tores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration    |
-| **massdev.RData**  | stores mass deviation of the products over Monte Carlo iterations    |  
-| **runQPuB\_ROUT.txt**  | contains the initial parameters that were feed to the algorithm and acceptance rates as the chain progresses. The output of any print command directly goes into the file.    |  
-| **residuals\_M.txt** | residual plot at **M**<sup>th</sup> iteration. The plot display mass deviation for individual amino acids of the substrate     |
-| **conc\_means\_Nrep.csv, conc\_sd\_Nrep.csv** | stores the Markov chain after dividing the products by the scaling factor pre-calculated according to the substrate concentration   |
-| **statistics.csv**  | summary statistic for the Markov chain     |
-| **massdeviation.png**  | plot of total mass deviation of the products over Monte Carlo iterations  |
-| **relation.png**  | plot of relation between the estimated conversion factors and the peptide lengths    |  
- 
+| <span>**boxplot\_chain.pdf**</span>                                                  | boxplot corresponding to the distributions of conversion factors                                     |
+| <span>**chain.RData**</span>                                                         | Markov chain: time series of all parameters                                                          |
+| <span>**chain\_backscaled.RData**</span>                                             | Markov chain after backscaling (see Sec. [\[sec:post\]](#sec:post))                                  |
+| <span>**conc\_five\_rp.csv, conc\_median\_rp.csv, conc\_ninetyfive\_rp.csv** </span> | 0.05, 0.5 and 0.95 quantiles of concentration kinetics of all products for the rp<sup>th</sup> replicate |
+| <span>**runQPuB\_ROUT.txt**</span>                                                   | Progress report of the algorithm. The output of every print command directly goes into this file.    |
+| <span>**chain\_j.pdf**</span>                                                        | Trace plots and distributions of the Markov chain at j<sup>th</sup> iteration                            |
+| <span>**residuals\_j.txt**</span>                                                    | Residual plots at j<sup>th</sup> iteration                                                               |
+| <span>**statistics.csv**</span>                                                      | Summary statistics of the Markov chain                                                               |
+
+
    
  ## Documentation
  
