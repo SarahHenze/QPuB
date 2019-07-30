@@ -114,7 +114,7 @@ the path to the folder:
 ## Examples
 
    The **examples** folder contains two toy examples of endopeptidase digestion. 
-   In order to run the examples, execute the following commands in the terminalassuming your current directory is the QPuB-master
+   In order to run the examples, execute the following commands in the terminal assuming your current directory is the QPuB-master
    
    ### Example 1: Endopeptidase digestion without noise
    ```sh     
