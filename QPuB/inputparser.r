@@ -65,6 +65,7 @@ cat(paste0("Path of output folder: ", file.path(paste(path,"QPuB-Output", outnam
 
 # redirect console output to a file
 cat("\nTerminal output redirected to runQPuB_ROUT.txt.\n")
+cat("RUNNING...")
 sink('runQPuB_ROUT.txt', split=FALSE)
 
 ####################################################################################################
