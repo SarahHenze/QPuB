@@ -138,7 +138,7 @@ the path to the folder:
 | ------ | ------ |
 | <span>**boxplot\_chain.pdf**</span>                                                  | boxplot corresponding to the distributions of conversion factors                                     |
 | <span>**chain.RData**</span>                                                         | Markov chain: time series of all parameters                                                          |
-| <span>**chain\_backscaled.RData**</span>                                             | Markov chain after backscaling (see Sec. [\[sec:post\]](#sec:post))                                  |
+| <span>**chain\_backscaled.RData**</span>                                             | Markov chain after backscaling (see Section 2.3.5 of the [Documentation](Documentation)                                  |
 | <span>**conc\_five\_rp.csv, conc\_median\_rp.csv, conc\_ninetyfive\_rp.csv** </span> | 0.05, 0.5 and 0.95 quantiles of concentration kinetics of all products for the rp<sup>th</sup> replicate |
 | <span>**runQPuB\_ROUT.txt**</span>                                                   | Progress report of the algorithm. The output of every print command directly goes into this file.    |
 | <span>**chain\_j.pdf**</span>                                                        | Trace plots and distributions of the Markov chain at j<sup>th</sup> iteration                            |
