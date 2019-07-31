@@ -33,7 +33,7 @@ At least one argument must be supplied: -infol.\n
 For documentation see: https://github.com/QuantSysBio/QPuB.\n", call.=FALSE)
 }
 
-# for use in R:
+# for use in RStudio:
 # setwd("/home/shenze/Downloads/QPuB-master/QPuB")
 # file <- 'runQPuB.r'
 # infol <- 'examples/Prot_K386'
