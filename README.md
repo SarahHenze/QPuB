@@ -103,7 +103,10 @@ For more details on how to navigate to a particular directory using the **cd** c
   $ Rscript <path to runQPuB.r relative to the folder ABC> -infol <path to input_folder> -outfol <output_folder> -titr <titration_file>
 ```
 
-where the fields enclosed within **<>** including the symbol **<>** MUST be replaced by appropriate folder and file names along with their relative paths (if required) as explained in the **Examples** below. Note that, for output folder you should not provide the path, but only the name of the folder. The same applies for the titration data file. The table below provides the meaning of the flags used in the above shell command.
+where the fields enclosed within **<>** including the symbol **<>** MUST be replaced by appropriate folder and file names along with their relative paths (if required) as explained in the **Examples** below. For output folder you should not provide the path, but only the name of the folder. The same applies for the titration data file. Note that For now, ./ and ../ notation does not work. Please use the full path. Also avoid leading and trailing
+slashes.
+
+The table below provides the meaning of the flags used in the above shell command.
 
 |         Flags                 |                 Meaning                                                              |
 | :----------------------- | :---------------------------------------------------------------------------- |
