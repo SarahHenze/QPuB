@@ -43,7 +43,7 @@ To install the above packages one by one, start your **R** shell, and execute th
 ```R
  install.packages("package_name")
  ```
-where the "package_name" should be replaced by the name of packages that are listed above. Alternatively, one can copy-paste the following command in the R terminal 
+where the **package_name** should be replaced by the name of packages that are listed above. Alternatively, one can copy-paste the following command in the R terminal 
 
 ```R
 install.packages(c("R.utils", "tictoc", "mcmcse", "mvtnorm", "tmvtnorm", "corpcor", "dqrng", "coda", "matrixcalc", "ggdmc", "sys", "matrixStats"))
@@ -71,7 +71,7 @@ structure (see Sections 2.3.1 and 2.3.2  of the [Documentation](Documentation.pd
 **4.** Navigate to the directory from where you want to run the QPuB, For example if the name of the directory is "ABC" then 
 
 ```sh 
-   $ cd <path_to_ABC>
+   $ cd <path to the ABC folder>
 ```
 For more details on how to navigate to a particular directory using the **cd** command, see [here](https://en.wikipedia.org/wiki/Cd_(command)). 
 
@@ -83,9 +83,8 @@ For more details on how to navigate to a particular directory using the **cd** c
 
 where the fields enclosed within **<>** including the symbol **<>** MUST be replaced by appropriate folder and file names along with their relative paths (if required). Note that, for output folder you should not provide the path, but only the name of the folder. The same applies for the titration data file. The table below provides the meaning of the flags used in the above shell command.
 
-|                          |                                                                               |
+|         Flags                 |                 Meaning                                                              |
 | :----------------------- | :---------------------------------------------------------------------------- |
-| <span>**path to runQPuB.r relative to the folder ABC**</span>   | path of the <span>**runQPuB.r**</span> relative to the working directory ABC. This input is mandatory.         |
 | <span>**-infol**</span>  | flag for the <span>**input_folder**</span>. This input is mandatory.      |
 | <span>**-outfol**</span> | flag for the <span>**output_folder**</span>. This input is optional, and the name can be defined by the user            |
 | <span>**-titr**</span>   | flag for the <span>**titration_file**</span>. It is a csv-file. This input is optional. |
@@ -130,12 +129,8 @@ Flags can also be specified using `--` as prefix. For example, `--infol=inputfol
 | <span>**residuals\_j.txt**</span>                                                    | Residual plots at j<sup>th</sup> iteration                                                               |
 | <span>**statistics.csv**</span>                                                      | Summary statistics of the Markov chain                                                               |
 
-
-   
- ## Documentation
- 
-   A PDF version of the documentation is available at [Documentation](Documentation.pdf)
- 
+Output generated while running the examples are illustrated in Chapter 5 of the [Documentation](Documentation.pdf).
+    
 ## Troubleshooting
 
 In this chapter, we listed a non-exhaustive list of issues that the user
@@ -201,6 +196,10 @@ problem, users are recommended to experiment with the parameters
 controlling the adaptation scheme and the Markov chain. In [3], the authors
 provide an excellent summary of various pathological cases regarding the
 adaptive scheme and optimal scaling for MCMC.
+
+ ## Documentation
+ 
+   A PDF version of explaining the details of the QPuB is available as a [Documentation](Documentation.pdf)
   
  ## Developers
                
