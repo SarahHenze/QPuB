@@ -22,7 +22,7 @@ At least one argument must be supplied: -infol.\n
 For documentation see: https://github.com/QuantSysBio/QPuB.\n", call.=FALSE)
 }
 ```
-and enabled the following snippets and editing the variables according to the desired example. For **Prot_K386** with an output folder **my_fancy_name**m, the snippets looks like the following:
+and enabled the following snippets and editing the variables according to the desired example. For **Prot_K386** with an output folder **my_fancy_name**, the snippets looks like the following:
 
 ```R
 # file <- 'runQPuB.r'
