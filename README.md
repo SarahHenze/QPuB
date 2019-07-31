@@ -8,7 +8,7 @@ QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employ
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. 
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments. One can execute QPuB from RStudio, but in that case one needs 
 
 ### Prerequisites
 
