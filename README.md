@@ -21,6 +21,8 @@ In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0
 * [**sys**](https://cran.r-project.org/web/packages/sys/index.html) 
    
 * [**mcmcse**](https://cran.r-project.org/web/packages/mcmcse/index.html) 
+
+* [**mvtnorm**](https://cran.r-project.org/web/packages/mvtnorm/index.html) 
    
 * [**tmvtnorm**](https://cran.r-project.org/web/packages/tmvtnorm/index.html)  
 
@@ -44,7 +46,7 @@ To install the above packages, start your **R** shell, and execute the following
 Alternatively, one can copy-paste the following command in the R terminal 
 
 ```R
-install.packages(c("R.utils", "tictoc", "mcmcse", "tmvtnorm", "corpcor", "dqrng", "coda", "matrixcalc", "ggdmc", "sys", "matrixStats"))
+install.packages(c("R.utils", "tictoc", "mcmcse", "mvtnorm", "tmvtnorm", "corpcor", "dqrng", "coda", "matrixcalc", "ggdmc", "sys", "matrixStats"))
  ```
 and press enter.
 
