@@ -1,5 +1,5 @@
 
-<img src="logoqpub.png" width="200">
+<img src="logoqpub.png" width="200"> 
 
 :black_medium_small_square: [Bayesian inference][bayestat-url] 
 :black_medium_small_square:[Peptide quantification][peptide-url]
@@ -8,7 +8,7 @@ QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employ
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. 
 
 ### Prerequisites
 
@@ -54,8 +54,8 @@ REMEMBER, for Linux, the above command might need the root access.
 
 
 ## Running QPuB
-   Once all the prerequisites are met, QPuB is needed to be downloaded from its Github repository. Next,
-   to use QPuB on your data, follow these steps:
+   Once all the prerequisites are met, QPuB is needed to be downloaded from its Github repository. Click [here](https://github.com/QuantSysBio/QPuB/archive/master.zip) for to download the .zip file. Next, in order 
+   to run QPuB on your data, follow the steps below:
 
 **1.** Make sure everything is properly installed on your computer (see
 Chapter 3 of the documentation).
@@ -68,51 +68,34 @@ structure (see Sections 2.3.1 and 2.3.2  of the [Documentation](Documentation.pd
 [Mac](https://www.wikihow.com/Open-a-Terminal-Window-in-Mac),
 [Windows](https://www.wikihow.com/Open-Terminal-in-Windows)).
 
-**4.** Go to your working directory:
+**4.** Navigate to the directory from where you want to run the QPuB, For example if the name of the directory is "ABC" then 
 
 ```sh 
-   $ cd hostname:˜/workingdirectory
+   $ cd <path_to_ABC>
 ```
+For more details on how to navigate to a particular directory using the **cd** command, see [here](https://en.wikipedia.org/wiki/Cd_(command)). 
 
-**5.** The QPuB main script is executed using flags:
+**5.** Once you are in your working directory (the directory from where you wish to run QPuB), say "ABC", you can run QPuB using the flags as below 
 
 ```sh
-  $ Rscript <name or path to runQPuB.r> -infol -outfol -titr
+  $ Rscript <path to runQPuB.r relative to the folder ABC> -infol <path to input_folder> -outfol <output_folder> -titr <titration_file>
 ```
 
-QPuB is equipped with facilities to accept and parse command line
-arguments, where
+where the fields enclosed within **<>** including the symbol **<>** MUST be replaced by appropriate folder and file names along with their relative paths (if required). Note that, for output folder you should not provide the path, but only the name of the folder. The same applies for the titration data file. The table below provides the meaning of the flags used in the above shell command.
 
 |                          |                                                                               |
 | :----------------------- | :---------------------------------------------------------------------------- |
-| <span>**name or path to runQPuB.r**</span>   | name/path of the <span>**runQPuB.r**</span>. This input is mandatory.         |
-| <span>**-infol**</span>  | name/path of the <span>**input folder**</span>. This input is mandatory.      |
-| <span>**-outfol**</span> | userdefined name of the **output folder**. This input is optional.            |
-| <span>**-titr**</span>   | name of the <span>**titration data**</span> csv-file. This input is optional. |
+| <span>**path to runQPuB.r relative to the folder ABC**</span>   | path of the <span>**runQPuB.r**</span> relative to the working directory ABC. This input is mandatory.         |
+| <span>**-infol**</span>  | flag for the <span>**input_folder**</span>. This input is mandatory.      |
+| <span>**-outfol**</span> | flag for the <span>**output_folder**</span>. This input is optional, and the name can be defined by the user            |
+| <span>**-titr**</span>   | flag for the <span>**titration_file**</span>. It is a csv-file. This input is optional. |
 
-Flags can be specified as `-infol inputfolder` or `--infol=inputfolder`.
+Flags can also be specified using `--` as prefix. For example, `--infol=inputfolder`. If you do not wish to provide the output folder and/or titration data, please do not use the respective flags. Please follow the examples below for illustrations.
 
-Depending on your working directory, you also have to provide the path
-to the runQPuB.r file:
 
-1.  working directory is QPuB directory: `runQPuB.r`
-
-2.  working directory is somewhere else: `path\QPuB\runQPuB.r`
-
-The first argument will always be taken as the name of the R script:
-`Rscript runQPuB.r`.
-
-Depending on the location of the input folder, you also have to provide
-the path to the folder:
-
-1.  inputfolder is in same parent directory as QPuB: `-infol
-    inputfolder`
-
-2.  inputfolder is somewhere else: `-infol path\inputfolder`
 ## Examples
 
-   The **examples** folder contains two toy examples of endopeptidase digestion. 
-   In order to run the examples, execute the following commands in the terminal assuming your current directory is the QPuB-master
+   The **examples** folder contains two toy examples of endopeptidase digestion and a gp100<sub>40-52</sub> digestion by 26S proteasomes. In order to run these examples, execute the following commands in the terminal **assuming your current directory is the QPuB-master**
    
    ### Example 1: Endopeptidase digestion without noise
    ```sh     
@@ -153,6 +136,72 @@ the path to the folder:
  
    A PDF version of the documentation is available at [Documentation](Documentation.pdf)
  
+## Troubleshooting
+
+In this chapter, we listed a non-exhaustive list of issues that the user
+might get into while running the QPuB. However, users are <span>strongly
+recommended</span> to keep track of the **runQPuB\_ROUT.txt** from
+<span>the very beginning of the run</span>, as all the outputs including
+the warnings that might be generated for providing an out-of-range value
+for a particular input parameter, are printed.
+
+### Multiple installation of R
+
+The user must make sure that the version of the R is 3.5.0 or above. In
+case, the user has multiple installation of R, the path to the R
+executable corresponding to the version specified for the QPuB should be
+provided. For Windows, please click
+[here](https://cran.r-project.org/bin/windows/base/rw-FAQ.html#Rcmd-is-not-found-in-my-PATH_0021)
+for more details on how to include the desired R executable in the PATH
+variable.
+
+### Command line execution
+
+Care must be taken while writing the command line to run QPuB. For
+example, the following type of command will generate error:  
+
+``` 
+
+$ Rscript path_to_runQPuB.r -infol some_path/../examples/example_folder
+```
+
+Instead, the <span>right</span> command type is
+
+    $ Rscript path_to_runQPuB.r -infol examples/example_folder
+
+The same rules applies while including the titration file, for example,
+assuming the name of the example folder as **P** and the corresponding
+titration file name is **titration\_P**, the following command
+
+    $ Rscript path_to_runQPuB.r -infol examples/P -titr examples/P/titration_P.csv
+
+will generate an error, while the command
+
+    $ Rscript path_to_runQPuB.r -infol examples/P -titr titration_P.csv
+
+will work nicely.
+
+### MCMC chains
+
+It may happen that the Markov chain is not exploring the parameter
+space. There might be several reasons for that. For example, the value
+of `sigma_start` is so low that the chain stop exploring the parameter
+space. At the same time if the value of the `GammaExponent` is higher,
+due to vanishing nature of the adaptation, the covariance matrix will
+remain stationary leaving the chain stuck at an undesired region.
+Therefore, one solution to this is to stop the adaptation at the
+beginning for sufficient exploration and then resume the adaptation
+again after visually inspecting the chain. This may take several trial
+runs to know the number of iterations needed before starting the
+adaptation. Remember that this problem is different than the one where
+the chain needs to adapt at the beginning to reach the target
+covariance matrix. But, it may take over millions over millions of iterations before reaching the target region. This is
+especially the case for higher dimensions . Overall, depending upon the
+problem, users are recommended to experiment with the parameters
+controlling the adaptation scheme and the Markov chain. In [3], the authors
+provide an excellent summary of various pathological cases regarding the
+adaptive scheme and optimal scaling for MCMC.
+  
  ## Developers
                
   * [**Sarah Henze**](https://www.mpibpc.mpg.de/person/59990/84522)
@@ -161,13 +210,17 @@ the path to the folder:
   
   * [**Juliane Liepe**](https://www.mpibpc.mpg.de/person/52238/15851745)
  
- ## References 
+ ## References related to QPuB 
     
    [1] Henze, S., Paul, D., Mansurkhodzhaev, A., Henklein, P., Textoris-Taube, K., Henning, U., Mishto,
 M., and Leipe, J. (2019). Quantification of in vitro peptide hydrolysis and protease-catalyzed
-peptide splicing using bayesian inference. Submitted.
+peptide splicing using bayesian inference. Under review.
 
    [2] Henze, S*., Paul, D*., Mishto, M., Liepe, J (2019). QPuB - Quantification of peptides using Bayesian inference. In preperation.  *Equal contributions
+   
+## Other references
+
+   [3] Rosenthal, J. S. (2011). Optimal proposal distributions and adaptive MCMC. Handbook of Markov Chain Monte Carlo, 4(10.1201).
   
   ## LICENSE
   
