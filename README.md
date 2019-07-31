@@ -8,7 +8,8 @@ QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employ
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments. One can execute QPuB from RStudio, but in that case one needs to disable the following code snippet in the **runQPuB.r** script
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments. One can execute QPuB from RStudio, but in that case one first needs to open the main Rscript **runQPuB.r** and then disable/commenting out the following code snippet in that scripts 
+
 ```R
 args = commandArgs(trailingOnly=FALSE, asValue=TRUE)
 keys <- attachLocally(args)
@@ -22,7 +23,7 @@ At least one argument must be supplied: -infol.\n
 For documentation see: https://github.com/QuantSysBio/QPuB.\n", call.=FALSE)
 }
 ```
-and enabled the following snippets and editing the variables according to the desired example. For **Prot_K386** with an output folder **my_fancy_name**, the snippets looks like the following:
+and enable/uncommenting the following snippet and editing the variables according to the desired example. For **Prot_K386** with an output folder **my_fancy_name**, the snippets looks like the following:
 
 ```R
 # file <- 'runQPuB.r'
