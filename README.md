@@ -116,7 +116,7 @@ Flags can also be specified using `--` as prefix. For example, `--infol=inputfol
 
 ## Examples
 
-   The **examples** folder contains two toy examples of endopeptidase digestion and a gp100<sub>40-52</sub> digestion by 26S proteasomes. In order to run these examples, execute the following commands in the terminal **assuming your current directory is the QPuB-master**
+   The **examples** folder contains two toy examples of endopeptidase digestion, one exopeptidase digestion, and a gp100<sub>40-52</sub> digestion by 26S proteasomes. In order to run these examples, execute the following commands in the terminal **assuming your current directory is the QPuB-master**
    
    ### Example 1: Endopeptidase digestion without noise
    ```sh     
@@ -130,7 +130,13 @@ Flags can also be specified using `--` as prefix. For example, `--infol=inputfol
         Rscript ./QPuB/runQPuB.r -infol examples/toy_noise
    
  ``` 
-   ### Example 3: gp100<sub>40-52</sub> digestion by 26S proteasomes
+  ### Example 4: gp100<sub>40-52</sub> digestion by 26S proteasomes
+  ```sh     
+       
+        Rscript ./QPuB/runQPuB.r -infol examples/toy exo
+   
+ ``` 
+   ### Example 4: gp100<sub>40-52</sub> digestion by 26S proteasomes
   ```sh     
        
         Rscript ./QPuB/runQPuB.r -infol examples/Prot_K386
