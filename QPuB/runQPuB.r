@@ -35,9 +35,10 @@ For documentation see: https://github.com/QuantSysBio/QPuB/manual.\n", call.=FAL
 }
 
 # for use in R:
-#setwd("/home/shenze/Downloads/QPuB-master/QPuB")
-#file <- 'runQPuB.r'
-#infol <- '/home/shenze/Downloads/QPuB-master/Prot_K386'
+# setwd("/home/shenze/Downloads/QPuB-master/QPuB")
+# file <- 'runQPuB.r'
+# infol <- '/home/shenze/Downloads/QPuB-master/Prot_K386'
+# infol <- 'examples\\Prot_K386'
 # titr <- '190423_K386_titration_substrate_charge_3_K386.csv'
 
 # get path of QPuB
@@ -46,6 +47,9 @@ if(dirname(file)=='.'){
 } else { 
       path_qpub <- normalizePath(dirname(file))
 }
+
+# on Windows: format path
+infol <- gsub(infol, pattern="\\", replacement="/", fixed=TRUE)
 
 # get path of input folder
 if(dirname(infol)=='.'){ # if only folder name provided
@@ -60,8 +64,8 @@ if(dirname(infol)=='.'){ # if only folder name provided
 } else if(grepl('/', infol)){ # if short path is provided
 
 	ID <- unlist(strsplit(infol, "/"))[2]
-    path <- dirname(path_qpub)
-	shortpath <- unlist(strsplit(infol, "/"))[1]
+	path <- dirname(path_qpub)
+	shortpath <- unlist(strsplit(infol, c("/")))[1]
 	path <- file.path(paste(path,shortpath, sep='/'), fsep = .Platform$file.sep)
       if(file.exists(file.path(paste(path,ID,sep='/'), fsep = .Platform$file.sep))){ # try directory of QPuB folder
             infol <- file.path(paste(path,ID,sep='/'), fsep = .Platform$file.sep)
