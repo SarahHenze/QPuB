@@ -132,7 +132,7 @@ the path to the folder:
  ``` 
  ## Output of QPuB
  
-  QPuB generates the following set of output files in the respective sub-folder **OUTPUT_example** inside the  [Output](https://github.com/QuantSysBio/QPuB/tree/master/Output) folder
+  QPuB generates the following set of output files
    
  | File | Description |
 | ------ | ------ |
