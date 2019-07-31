@@ -38,6 +38,7 @@ For documentation see: https://github.com/QuantSysBio/QPuB/manual.\n", call.=FAL
 # setwd("/home/shenze/Downloads/QPuB-master/QPuB")
 # file <- 'runQPuB.r'
 # infol <- 'examples/Prot_K386'
+# outfol <- 'my_fancy_name'
 # titr <- '190423_K386_titration_substrate_charge_3_K386.csv'
 
 ####################################################################################################
