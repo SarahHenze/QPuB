@@ -28,10 +28,9 @@ if (!exists('infol')){
 stop("This is the QPuB package. \n
 At least one argument must be supplied: -infol.\n 
 -infol inputfolder (COMPULSORY): folder containing all of the following input files \n AND folder 'data' with at least one csv file with input data. \n 
--outfol name of outputfolder (OPTIONAL): if not provided, default name will be 'OUTPUT_inputfolder(i)'. \n
--tim timepoints (OPTIONAL): txt with timepoints to compare, default: successive timepoints. \n
--titr titrationdata (OPTIONAL): csv with titration data, at least two values \n
-For documentation see: https://github.com/QuantSysBio/QPuB/manual.\n", call.=FALSE)
+-outfol outputfolder (OPTIONAL): if not provided, default name will be 'OUTPUT_inputfolder(i)'. \n
+-titr titrationfile (OPTIONAL): csv file with titration data \n
+For documentation see: https://github.com/QuantSysBio/QPuB.\n", call.=FALSE)
 }
 
 # for use in R:
