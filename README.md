@@ -12,7 +12,7 @@ The following instructions will help you to download QPuB and execute the same t
 
 ### Prerequisites
 
-In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0](https://www.r-project.org/) and the following packages:
+In order to run QPuB, users MUST install [**R** ≥ 3.5.0](https://www.r-project.org/) and the following packages:
 
 * [**R.utils**](https://cran.r-project.org/web/packages/R.utils/index.html)
    
@@ -38,12 +38,12 @@ In order to run QPuB, users are strongly advised to install [**R** ≥ 3.5.0
 
 * [**matrixStats**](https://www.rdocumentation.org/packages/matrixStats) 
 
-To install the above packages, start your **R** shell, and execute the following command:
+To install the above packages one by one, start your **R** shell, and execute the following command:
 
 ```R
  install.packages("package_name")
  ```
-Alternatively, one can copy-paste the following command in the R terminal 
+where the "package_name" should be replaced by the name of packages that are listed above. Alternatively, one can copy-paste the following command in the R terminal 
 
 ```R
 install.packages(c("R.utils", "tictoc", "mcmcse", "mvtnorm", "tmvtnorm", "corpcor", "dqrng", "coda", "matrixcalc", "ggdmc", "sys", "matrixStats"))
@@ -54,7 +54,7 @@ REMEMBER, for Linux, the above command might need the root access.
 
 
 ## Running QPuB
-   Once all the prerequisites are met, QPuB is needed to be download either manually from its Github repository. Next,
+   Once all the prerequisites are met, QPuB is needed to be downloaded from its Github repository. Next,
    to use QPuB on your data, follow these steps:
 
 **1.** Make sure everything is properly installed on your computer (see
