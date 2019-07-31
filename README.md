@@ -130,7 +130,7 @@ Flags can also be specified using `--` as prefix. For example, `--infol=inputfol
         Rscript ./QPuB/runQPuB.r -infol examples/toy_noise
    
  ``` 
-  ### Example 4: gp100<sub>40-52</sub> digestion by 26S proteasomes
+  ### Example 3: gp100<sub>40-52</sub> digestion by 26S proteasomes
   ```sh     
        
         Rscript ./QPuB/runQPuB.r -infol examples/toy exo
