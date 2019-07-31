@@ -37,9 +37,11 @@ For documentation see: https://github.com/QuantSysBio/QPuB/manual.\n", call.=FAL
 # for use in R:
 # setwd("/home/shenze/Downloads/QPuB-master/QPuB")
 # file <- 'runQPuB.r'
-# infol <- '/home/shenze/Downloads/QPuB-master/Prot_K386'
-# infol <- 'examples\\Prot_K386'
+# infol <- 'examples/Prot_K386'
 # titr <- '190423_K386_titration_substrate_charge_3_K386.csv'
+
+####################################################################################################
+###### AQUIRING PATHS
 
 # get path of QPuB
 if(dirname(file)=='.'){
