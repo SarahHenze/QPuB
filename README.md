@@ -270,6 +270,7 @@ peptide splicing using Bayesian inference. Under review.
 ## Other references
 
    [3] Rosenthal, J. S. (2011). Optimal proposal distributions and adaptive MCMC. Handbook of Markov Chain Monte Carlo, 4(10.1201).
+   
    [4] Peters, B. and Janek, K. and Kuckelkorn, U. and Holzh<span>ü</span>tter, H.-G. (2002). Assessment of proteasomal cleavage probabilities from kinetic analysis of time-dependent product formation, Journal of molecular biology, 318(3), 847-862.
   
   ## LICENSE
