@@ -8,7 +8,8 @@ QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employ
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments. 
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments as well from RStudio but with little modifcations in the code.
+
 ### Prerequisites
 
 In order to run QPuB, users MUST install [**R** ≥ 3.5.0](https://www.r-project.org/) and the following packages:
@@ -68,19 +69,20 @@ structure (see Sections 2.3.1 and 2.3.2  of the [Documentation](Documentation.pd
 [Windows](https://www.wikihow.com/Open-Terminal-in-Windows)).
 
 **4.** Navigate to the directory from where you want to run the QPuB, For example if the name of the directory is "ABC" then 
-
+       the command takes the following generic form:
 ```sh 
    $ cd <path to the ABC folder>
 ```
 For more details on how to navigate to a particular directory using the **cd** command, see [here](https://en.wikipedia.org/wiki/Cd_(command)). 
 
-**5.** Once you are in your working directory (the directory from where you wish to run QPuB), say "ABC", you can run QPuB using the flags as below 
+**5.** Once you are in your working directory (the directory from where you wish to run QPuB), say "ABC", the command to run the QPuB has the following generic form
 
 ```sh
   $ Rscript <path to runQPuB.r relative to the folder ABC> -infol <path to input_folder> -outfol <output_folder> -titr <titration_file>
 ```
+**NOTE** The commands described above are providing a generic structure and must not be copy-pasted directly in the terminal.
 
-where the fields enclosed within **<>** including the symbol **<>** MUST be replaced by appropriate folder and file names along with their relative paths (if required) as explained in the **Examples** below. For output folder you should not provide the path, but only the name of the folder. The same applies for the titration data file. Note that For now, ./ and ../ notation does not work. Please use the full path. Also avoid leading and trailing
+For execution, the fields enclosed within **<>** including the symbol **<>** MUST be replaced by appropriate folder and file names along with their relative paths (if required) as explained in the **Examples** below. For output folder you should not provide the path, but only the name of the folder. The same applies for the titration data file. Note that For now, ./ and ../ notation does not work. Please use the full path. Also avoid leading and trailing
 slashes.
 
 The table below provides the meaning of the flags used in the above shell command.
