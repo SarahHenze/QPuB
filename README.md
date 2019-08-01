@@ -10,11 +10,11 @@
 
 The mass spectrometry ion peak area of peptides is linearly related to the absolute amount of the peptides through 
 a proportionality constant called conversion factor [4].
-QPuB (**Q**uantifcation of **P**eptides **u**sing **B**ayesian inference) employs [Bayesian statistical inference](https://en.wikipedia.org/wiki/Bayesian_inference) based on [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampling to learn the posterior distributions of the conversion factors for peptide products. 
+QPuB (**Q**uantifcation of **P**eptides **u**sing **B**ayesian inference) employs [Bayesian statistical inference](https://en.wikipedia.org/wiki/Bayesian_inference) based on [Markov chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo) sampling to learn the posterior distributions of the conversion factors for the peptide products without further experimentation. 
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments as well as from the [RStudio](https://www.rstudio.com/), but with little modifications in the code.
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments as well as from as from any graphical user interface such as [RStudio](https://www.rstudio.com/), but with little modifications in the code.
 
 ### Prerequisites
 
