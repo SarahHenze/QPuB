@@ -5,7 +5,7 @@
 
 :black_medium_small_square:[Bayesian inference][bayestat-url] 
 :black_medium_small_square:[Peptide quantification][peptide-url]
-:black_medium_small_square:[Quantitative mass spectrometry][massspec-url]
+:black_medium_small_square:[Mass spectrometry][massspec-url]
 :black_medium_small_square:[Proteomics][proteo-url]
 
 The mass spectrometry ion peak area of peptides is linearly related to the absolute amount of the peptides through 
