@@ -1,6 +1,8 @@
 
 <img src="logoqpub.png" width="200"> -- **adding Bayesian flavour in peptide quantification**
 
+&nbsp;
+
 :black_medium_small_square: [Bayesian inference][bayestat-url] 
 :black_medium_small_square:[Peptide quantification][peptide-url]
 
@@ -8,7 +10,7 @@ QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employ
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments as well from RStudio but with little modifcations in the code.
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments as well from the [RStudio](https://www.rstudio.com/), but with little modifcations in the code.
 
 ### Prerequisites
 
@@ -261,6 +263,9 @@ peptide splicing using bayesian inference. Under review.
   ## LICENSE
   
   This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for details
+  
+  :copyright: 
+  
   
 <!-- Markdown link & img dfn's -->
 [bayestat-image]: https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo#/media/File:Bayes_icon.svg
