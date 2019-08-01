@@ -14,7 +14,7 @@ QPuB (**Q**uantifcation of **P**eptides **u**sing **B**ayesian inference) employ
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments as well as from as from any graphical user interface such as [RStudio](https://www.rstudio.com/), but with little modifications in the code.
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. 
 
 ### Prerequisites
 
@@ -60,8 +60,10 @@ REMEMBER, for Linux, the above command might need the root access.
 
 
 ## Running QPuB
-   Once all the prerequisites are met, QPuB needs to be downloaded from its Github repository. Click [here](https://github.com/QuantSysBio/QPuB/archive/master.zip) to download the .zip file. 
-   In order to run QPuB on your data, follow the steps below:
+   Once all the prerequisites are met, QPuB needs to be downloaded from its Github repository. Click [here](https://github.com/QuantSysBio/QPuB/archive/master.zip) to download the .zip file and unzip it. 
+   QPuB is designed to be invoked using the command line arguments as well as from as from any graphical user interface such as [RStudio](https://www.rstudio.com/), but with little modifications in the code. See **Running QPuB from RStudio** below.
+   
+   In order to run QPuB on your data from the terminal, follow these steps:
 
 **1.** Make sure everything is properly installed on your computer (see
 Chapter 3 of the [Documentation](Documentation.pdf)).
@@ -84,7 +86,7 @@ For more details on how to navigate to a particular directory using the **cd** c
 **5.** Once you are in your working directory (the directory from where you wish to run QPuB), say "ABC", the command to run QPuB has the following generic form
 
 ```sh
-  $ Rscript <path to runQPuB.r relative to the folder ABC> -infol <path to input_folder> -outfol <output_folder> -titr <titration_file>
+   $ Rscript <path to runQPuB.r relative to the folder ABC> -infol <path to input_folder> -outfol <output_folder> -titr <titration_file>
 ```
 **NOTE** The commands described above are providing a generic structure and must not be copy-pasted directly in the terminal.
 
@@ -106,32 +108,32 @@ Flags can also be specified using `--` as prefix. For example, `--infol=inputfol
    The **examples** folder contains two toy examples of endopeptidase digestion, one toy exopeptidase digestion, and a real data gp100<sub>40-52</sub> digestion by 26S proteasomes. In order to run these examples, execute the following commands in the terminal **assuming your current directory is the QPuB-master folder**:
    
    ### Example 1: In silico endopeptidase digestion without noise
-   ```sh     
-       
-       Rscript ./QPuB/runQPuB.r -infol examples/toy_nonoise
+   ```sh    
    
+      Rscript ./QPuB/runQPuB.r -infol examples/insilico_endopep_nonoise
+       
  ``` 
    ### Example 2: In silico endopeptidase digestion with noise  
   ```sh     
-       
-        Rscript ./QPuB/runQPuB.r -infol examples/toy_noise
+  
+      Rscript ./QPuB/runQPuB.r -infol examples/insilico_endopep__noise
    
  ``` 
   ### Example 3: In silico exopeptidase digestion with noise 
   ```sh     
        
-        Rscript ./QPuB/runQPuB.r -infol examples/toy_exo
+      Rscript ./QPuB/runQPuB.r -infol examples/insilico_exopep_noise
    
  ``` 
    ### Example 4: gp100<sub>40-52</sub> digestion by 26S proteasomes
   ```sh     
        
-        Rscript ./QPuB/runQPuB.r -infol examples/Prot_K386 -titr 190423_K386_titration_substrate_charge_3.csv
+      Rscript ./QPuB/runQPuB.r -infol examples/gp100_40-52_proteasome -titr 190423_K386_titration_substrate_charge_3.csv
    
  ``` 
  ## Running QPuB from [RStudio](https://www.rstudio.com/)
  
-One can execute QPuB from RStudio, but in that case one first needs to open the main Rscript **runQPuB.r** and disable/comment out the following code snippet in that script
+One can execute QPuB from RStudio, but in that case one first needs to open the main Rscript **runQPuB.r** and disable/comment out the following code snippet in the head of that script
 
 ```R
 args = commandArgs(trailingOnly=FALSE, asValue=TRUE)
@@ -149,6 +151,7 @@ For documentation see: https://github.com/QuantSysBio/QPuB.\n", call.=FALSE)
 and enable/uncomment the following snippet and edit the variables according to the desired example. For **Prot_K386** with an output folder **my_fancy_name**, the snippets looks like the following:
 
 ```R
+# setwd("...")
 # file <- 'runQPuB.r'
 # infol <- 'examples/Prot_K386'
 # outfol <- 'my_fancy_name'
@@ -158,9 +161,9 @@ However, in order to avoid complications (especially crashing of RStudio for lar
 
  ## Output of QPuB
  
-  QPuB generates the following set of output files in chronological order:
+  QPuB generates the following set of output files and folders as the algorithm proceeds:
    
- | File | Description |
+ | File/Folder | Description |
 | ------ | ------ |
 |<span>**runQPuB\_ROUT.txt**</span> | Progress report of the algorithm. The output of every print command directly goes into this file.|  
 |<span>**plots\_inputsignals**</span> | Folder containing the kinetic plots of the input signal intensities for all peptide products  |
@@ -206,7 +209,6 @@ Care must be taken while writing the command line to run QPuB. For
 example, the following type of command will generate error:  
 
 ``` 
-
 $ Rscript path_to_runQPuB.r -infol ../examples/example_folder
 ```
 
@@ -271,7 +273,7 @@ peptide splicing using Bayesian inference. Under review.
 
    [3] Rosenthal, J. S. (2011). Optimal proposal distributions and adaptive MCMC. Handbook of Markov Chain Monte Carlo, 4(10.1201).
    
-   [4] Peters, B. and Janek, K. and Kuckelkorn, U. and Holzh<span>ü</span>tter, H.-G. (2002). Assessment of proteasomal cleavage probabilities from kinetic analysis of time-dependent product formation, Journal of molecular biology, 318(3), 847-862.
+   [4] Peters, B., Janek, K., Kuckelkorn, U., Holzh<span>ü</span>tter, H.-G. (2002). Assessment of proteasomal cleavage probabilities from kinetic analysis of time-dependent product formation, Journal of molecular biology, 318(3), 847-862.
   
   ## LICENSE
   
