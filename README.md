@@ -8,31 +8,7 @@ QPuB (**Q**uantifcation of **p**eptides **u**sing **B**ayesian inference) employ
 
 ## Getting started
 
-The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments. One can execute QPuB from RStudio, but in that case one first needs to open the main Rscript **runQPuB.r** and then disable/commenting out the following code snippet in that scripts 
-
-```R
-args = commandArgs(trailingOnly=FALSE, asValue=TRUE)
-keys <- attachLocally(args)
-
-if (!exists('infol')){
-stop("This is the QPuB package. \n
-At least one argument must be supplied: -infol.\n 
--infol inputfolder (COMPULSORY): folder containing all of the following input files \n AND folder 'data' with at least one csv file with input data. \n 
--outfol outputfolder (OPTIONAL): if not provided, default name will be 'OUTPUT_inputfolder(i)'. \n
--titr titrationfile (OPTIONAL): csv file with titration data \n
-For documentation see: https://github.com/QuantSysBio/QPuB.\n", call.=FALSE)
-}
-```
-and enable/uncommenting the following snippet and editing the variables according to the desired example. For **Prot_K386** with an output folder **my_fancy_name**, the snippets looks like the following:
-
-```R
-# file <- 'runQPuB.r'
-# infol <- 'examples/Prot_K386'
-# outfol <- 'my_fancy_name'
-# titr <- '190423_K386_titration_substrate_charge_3_K386.csv'
-```
-However, in order to avoid complications, users are strongly recommended to use the command line as described in the following sections.
-
+The following instructions will help you to download QPuB and execute the same to estimate the conversion factors for your peptide products. QPuB is designed to be invoked using the command line arguments. 
 ### Prerequisites
 
 In order to run QPuB, users MUST install [**R** ≥ 3.5.0](https://www.r-project.org/) and the following packages:
@@ -146,6 +122,33 @@ Flags can also be specified using `--` as prefix. For example, `--infol=inputfol
         Rscript ./QPuB/runQPuB.r -infol examples/Prot_K386
    
  ``` 
+ ## Running QPuB from [RStudio](https://www.rstudio.com/)
+ 
+One can execute QPuB from RStudio, but in that case one first needs to open the main Rscript **runQPuB.r** and then disable/commenting out the following code snippet in that scripts 
+
+```R
+args = commandArgs(trailingOnly=FALSE, asValue=TRUE)
+keys <- attachLocally(args)
+
+if (!exists('infol')){
+stop("This is the QPuB package. \n
+At least one argument must be supplied: -infol.\n 
+-infol inputfolder (COMPULSORY): folder containing all of the following input files \n AND folder 'data' with at least one csv file with input data. \n 
+-outfol outputfolder (OPTIONAL): if not provided, default name will be 'OUTPUT_inputfolder(i)'. \n
+-titr titrationfile (OPTIONAL): csv file with titration data \n
+For documentation see: https://github.com/QuantSysBio/QPuB.\n", call.=FALSE)
+}
+```
+and enable/uncommenting the following snippet and editing the variables according to the desired example. For **Prot_K386** with an output folder **my_fancy_name**, the snippets looks like the following:
+
+```R
+# file <- 'runQPuB.r'
+# infol <- 'examples/Prot_K386'
+# outfol <- 'my_fancy_name'
+# titr <- '190423_K386_titration_substrate_charge_3_K386.csv'
+```
+However, in order to avoid complications espcially crashing of RStudio for large datasets, users are strongly recommended to use the command line as described in the following sections.
+
  ## Output of QPuB
  
   QPuB generates the following set of output files
