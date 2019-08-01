@@ -7,12 +7,22 @@
 # OPTIONAL: READ IN TITRATION DATA FROM TITRATION FILE
 ####################################################################################################
 #
-# (C) Developers Sarah Henze, Debdas Paul, Juliane Liepe
+# (C) 2019 Sarah Henze, Debdas Paul, Juliane Liepe
 # Research group Quantitative and Systems Biology
 # Max Planck Institute for Biophysical Chemistry
 # Goettingen, Germany
 #
 # This project is licensed under the GNU General Public License v3.0 
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
 ####################################################################################################
 
@@ -65,7 +75,7 @@ cat(paste0("Path of output folder: ", file.path(paste(path,"QPuB-Output", outnam
 
 # redirect console output to a file
 cat("\nTerminal output redirected to runQPuB_ROUT.txt.\n")
-cat("RUNNING...")
+cat("RUNNING...\n")
 sink('runQPuB_ROUT.txt', split=FALSE)
 
 ####################################################################################################
