@@ -1,5 +1,5 @@
 
-<img src="logoqpub.png" width="200"> 
+<img src="logoqpub.png" width="200"> -- **adding Bayesian flavour in peptide quantification**
 
 :black_medium_small_square: [Bayesian inference][bayestat-url] 
 :black_medium_small_square:[Peptide quantification][peptide-url]
