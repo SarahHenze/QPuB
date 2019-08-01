@@ -61,7 +61,7 @@ if(exists('outfol')){ # userdefined name
             }
       }
 }
-cat(paste0("Path of output folder: ", file.path(paste(path,"QPuB-Output", outname, sep='/'), fsep = .Platform$file.sep), "\nDo not change folder name during run! \n"))
+cat(paste0("Path of output folder: ", file.path(paste(path,"QPuB-Output", outname, sep='/'), fsep = .Platform$file.sep), "\nNote: Do not change folder name during run! \n"))
 
 # redirect console output to a file
 cat("\nTerminal output redirected to runQPuB_ROUT.txt.\n")
