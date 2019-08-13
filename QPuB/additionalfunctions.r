@@ -388,7 +388,7 @@ concentrations <- function(ch){
                   conc = matrix(,nrow=0,ncol=dim(dat[[rp]][pep,-1])[2])
                   
                   for(sam in 1:length(samp)){
-                        conc_tmp = tryCatch( as.numeric(dat[[rp]][pep+1,-1] * ch[samp[sam],pep] * 1/titr_slope - titr_intercept), # concentrations with titration data
+                        conc_tmp = tryCatch( as.numeric(dat[[rp]][pep+1,-1] * ch[samp[sam],pep] * 1/titr_slope), # concentrations with titration data
                                           error = function(e) { as.numeric(dat[[rp]][pep+1,-1] * ch[samp[sam],pep]) }) # concentrations without titration data
                               
                         conc =  rbind(conc, conc_tmp)
